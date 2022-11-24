@@ -4,7 +4,7 @@ options {
     tokenVocab=cLexer;
 }
 
-root: program+;
+root: program* EOF;
 
 program:
     | declaration
@@ -17,8 +17,10 @@ declaration
     ;
 
 initDeclaratorList
-    :   initDeclarator (',' initDeclarator)*
+    :   initDeclarator initDeclaratorFollow*
     ;
+
+initDeclaratorFollow: ',' initDeclarator;
 
 declarationSpecifiers
     :   declarationSpecifier+
@@ -29,15 +31,14 @@ initDeclarator
     ;
 
 declarationSpecifier
-    :   storageClassSpecifier
+    :   Const
     |   typeSpecifier
-    |   Const
+    |   storageClassSpecifier
     ;
 
 storageClassSpecifier
     :   'typedef'
     |   'static'
-    |   'auto'
     ;
 
 typeSpecifier
@@ -50,14 +51,14 @@ typeSpecifier
     |   'double'
     |   'signed'
     |   'unsigned')
-    |   structOrUnionSpecifier
+    |   structSpecifier
     |   enumSpecifier
     |   Identifier
     ;
 
-structOrUnionSpecifier
-    :   structOrUnion Identifier? '{' structDeclaration+ '}'
-    |   structOrUnion Identifier
+structSpecifier
+    :   Struct Identifier? '{' structDeclaration+ '}'
+    |   Struct Identifier
     ;
 
 structDeclaration
@@ -221,20 +222,19 @@ specifierQualifierList
     :   (typeSpecifier| Const) specifierQualifierList?
     ;
 
-structOrUnion
-    :   'struct'
-    |   'union'
-    ;
-
 enumSpecifier
     :   'enum' Identifier? '{' enumeratorList ','? '}'
     |   'enum' Identifier
     ;
 
 enumeratorList
-    :   enumerator (',' enumerator)*
+    :   enumerator enumaratorFollow*
     ;
 
+enumaratorFollow: ',' enumerator;
+
 enumerator
-    :   Identifier ('=' IntegerConstant)?
+    :   Identifier enumeratorAssign?
     ;
+
+enumeratorAssign: '=' IntegerConstant;

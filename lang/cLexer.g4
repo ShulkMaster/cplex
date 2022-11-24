@@ -20,7 +20,6 @@ LineComment
   ;
 
 // keywords
-Auto : 'auto';
 Break : 'break';
 Case : 'case';
 Char : 'char';
@@ -45,7 +44,6 @@ Static : 'static';
 Struct : 'struct';
 Switch : 'switch';
 Typedef : 'typedef';
-Union : 'union';
 Unsigned : 'unsigned';
 Void : 'void';
 Volatile : 'volatile';
