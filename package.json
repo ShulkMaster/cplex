@@ -1,0 +1,26 @@
+{
+  "name": "cplex",
+  "version": "1.0.0",
+  "description": "C parser",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShulkMaster/cplex.git"
+  },
+  "keywords": [
+    "c",
+    "parser"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ShulkMaster/cplex/issues"
+  },
+  "homepage": "https://github.com/ShulkMaster/cplex#readme",
+  "dependencies": {
+    "typescript": "^4.9.3"
+  }
+}
