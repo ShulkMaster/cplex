@@ -1,4 +1,3 @@
-import {Production} from 'syntax';
 import {ISyntax, ISyntaxProvider} from './ISyntaxProvider';
 
 export type DeclarationDerivation =
@@ -8,20 +7,17 @@ export type DeclarationDerivation =
   | 'storageClassSpecifier'
   ;
 
-export const Declarations: Production<DeclarationDerivation> = {
-  declarationSpecifiers: 'declarationSpecifiers',
-  declarationSpecifier: 'declarationSpecifiers',
-  typeSpecifier: 'declarationSpecifiers',
-  storageClassSpecifier: 'declarationSpecifiers',
-} as const;
+const DeclarationSyntax: ISyntax<DeclarationDerivation> = {
+  declarationSpecifier: {
+    Dot: ['declarationSpecifier', 'Break', 'Enum']
+  },
+  declarationSpecifiers: undefined,
+  storageClassSpecifier: undefined,
+  typeSpecifier: undefined
+};
 
-export const DeclarationSyntax: ISyntaxProvider = {
-  const syntax: ISyn
-  getSyntax(): ISyntax[] {
-    return [{
-      declarationSpecifier: {
-
-      }
-    }];
+export const DeclarationSyntaxProvider: ISyntaxProvider<DeclarationDerivation> = {
+  getSyntax(): ISyntax<DeclarationDerivation> {
+    return DeclarationSyntax;
   }
 }

@@ -29,8 +29,10 @@ type TerminalRules = ObjectFromList<typeof Rules>;
 
 export type Terminal = keyof TerminalRules;
 
-export type CSyntax =
-  Production<DeclarationDerivation>;
+export type Derivations =
+  | DeclarationDerivation;
+
+export type CSyntax = Production<Derivations>;
 
 export type Derivation = Terminal | keyof CSyntax;
 

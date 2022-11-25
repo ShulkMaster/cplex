@@ -1,20 +1,11 @@
-import {CSyntax, Derivation, Terminal} from './index';
+import {CSyntax, Derivation, Derivations, Terminal} from './index';
 
-export type ISyntax = {
-  [k in keyof CSyntax]: {
+export type ISyntax<T extends Derivations> = {
+  [k in keyof Pick<CSyntax, T>]: {
     [terminalKey in Terminal]?: Derivation[];
   };
 }
 
-export interface ISyntaxProvider {
-    getSyntax(): ISyntax[];
+export interface ISyntaxProvider<T extends Derivations> {
+    getSyntax(): ISyntax<T>;
 }
-
-const xd: ISyntax = {
-  declarationSpecifier: undefined, declarationSpecifiers: undefined, storageClassSpecifier: undefined,
-  typeSpecifier: {
-    AndAnd: ['And' , 'Break', 'declarationSpecifiers'],
-  }
-}
-
-const s = xd;
