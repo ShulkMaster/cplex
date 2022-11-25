@@ -9,11 +9,23 @@ export type DeclarationDerivation =
 
 const DeclarationSyntax: ISyntax<DeclarationDerivation> = {
   declarationSpecifier: {
-    Dot: ['declarationSpecifier', 'Break', 'Enum']
+    Const: ['Const'],
+    Static: ['storageClassSpecifier'],
+    Typedef: ['storageClassSpecifier'],
+    Char: ['typeSpecifier'],
+    Int: ['typeSpecifier'],
+    Float: ['typeSpecifier'],
   },
   declarationSpecifiers: undefined,
-  storageClassSpecifier: undefined,
-  typeSpecifier: undefined
+  storageClassSpecifier: {
+    Typedef: ['Typedef', null],
+    Static: ['Static', null],
+  },
+  typeSpecifier: {
+    Char: ['Char', null],
+    Int: ['Int', null],
+    Float: ['Float', null],
+  }
 };
 
 export const DeclarationSyntaxProvider: ISyntaxProvider<DeclarationDerivation> = {

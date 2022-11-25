@@ -14,5 +14,5 @@ enum Directions {
     LEFT,
     RIGHT
 };
-.
+
 static char myLeter;
