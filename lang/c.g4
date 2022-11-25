@@ -57,7 +57,8 @@ typeSpecifier
     ;
 
 structSpecifier
-    :   Struct Identifier? '{' structDeclaration+ '}'
+    :   Struct Identifier '{' structDeclaration+ '}'
+    |   Struct '{' structDeclaration+ '}'
     |   Struct Identifier
     ;
 
