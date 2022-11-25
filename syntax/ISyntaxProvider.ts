@@ -1,4 +1,4 @@
-import {CSyntax, Derivation, Derivations, Terminal} from './index';
+import {CSyntax, Derivation, Derivations, Terminal} from './index.js';
 
 export type ISyntax<T extends Derivations> = {
   [k in keyof Pick<CSyntax, T>]: {

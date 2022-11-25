@@ -1,40 +1,34 @@
-import { Derivation, Terminal } from 'parser';
-import cLexer from 'lexer/cLexer';
-
-export type DerivationChain = Map<Terminal, Derivation[]>;
+import {Derivation, Derivations, Terminal} from 'syntax';
+import {ISyntax, ISyntaxProvider} from './ISyntaxProvider';
 
 export class SyntaxTable {
-    private readonly _derivations: Map<Derivation, DerivationChain>;
-    private readonly _terminals: Map<string, Terminal>;
+  private readonly _cSyntaxRules: ISyntax<Derivations>;
 
-    constructor() {
-        cLexer.literalNames.forEach(literal => {
-            if(!Boolean(literal)) return;
-            const terminal: Terminal = Object.assign(literal, { _terminal: true }, true);
-            this._terminals.set(literal, terminal);
-        });
-        
-    }
+  constructor() {
+    this._cSyntaxRules = {} as ISyntax<Derivations>;
+  }
 
-    public asTerminal(text: string): Terminal | undefined {
-        return this._terminals.get(text);
+  public addSyntaxProvider(syntaxProvider: ISyntaxProvider<Derivations>): void {
+    const syntax = syntaxProvider.getSyntax();
+    for (const [key, value] of Object.entries(syntax)) {
+      const production = this._cSyntaxRules[key];
+      if (!production) {
+        this._cSyntaxRules[key] = value;
+        continue;
+      }
+      for (const [prodKey, prodValue] of Object.entries(production)) {
+        const terminal = production[prodKey];
+        if (Boolean(terminal)) throw new Error(`Duplicating table entry [${key}, ${prodKey}]`);
+        production[prodKey] = prodValue;
+      }
     }
+  }
 
-    public addDerivationChain(prod: Derivation, term: Terminal, derivations: Derivation[]): void {
-        let chain = this._derivations.get(prod);
-        if(!chain){
-            chain = new Map();
-        }
-        const exist = chain.has(term);
-        if(exist){
-            throw Error(`Duplicating table entry [${prod}, ${term}]`);
-        }
-        chain.set(term, derivations);
-    }
-
-    public getDerivations(prod: Derivation, term: Terminal) : readonly Derivation[] | undefined {
-        const chain = this._derivations.get(prod);
-        if(!chain) return undefined;
-        return chain.get(term);
-    }
+  public getDerivations(prod: Derivations, term: Terminal): readonly Derivation[] | undefined {
+    const chain = this._cSyntaxRules[prod];
+    if (!chain) return undefined;
+    const rules = chain[term];
+    if (!rules) return undefined;
+    return [...rules].reverse();
+  }
 }
