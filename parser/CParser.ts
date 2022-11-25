@@ -1,4 +1,3 @@
-import Token from 'antlr4/Token';
 import cLexer from 'lexer/cLexer.js';
 
 export class CParser {
@@ -11,10 +10,12 @@ export class CParser {
 
     public parse(): void {
         let continues = true;
+        const names = this.lex.getTokenNames();
         while(continues){
             const token = this.lex.nextToken()
             const lineCol = `[${token.line}, ${token.column}]`;
-            console.log(`${lineCol}: ${token.type} -> ${token.text}`);
+            const name = names[token.type];
+            console.log(`${lineCol}: ${token.type}(${name}) -> ${token.text}`);
             continues = token.type !== -1;
         }
     }

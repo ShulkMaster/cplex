@@ -4,17 +4,17 @@
         "baseUrl": ".",
         "forceConsistentCasingInFileNames": true,
         "isolatedModules": true,
-        "module": "Node16",
+        "module": "ESNext",
         "allowJs": true,
         "declaration": false,
-        "moduleResolution": "Node16",
+        "moduleResolution": "Node",
         "outDir": "dist",
         "sourceMap": false,
         "target": "es6",
         "esModuleInterop": true,
         "composite": false,
         "types": [
-            "node"
+            "node",
           ]
     },
     "exclude": [
