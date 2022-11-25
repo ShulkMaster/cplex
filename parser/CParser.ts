@@ -50,8 +50,12 @@ export class CParser {
           const path = this.stack[i];
           if(path === null) continue;
           const index = this.getLastIndex(temp.children);
-          const child = temp.children[index] || {name: path, text: '',children: []};
-          temp.children[index] = child;
+          let child = temp.children[index];
+          if(!child || child.name !== path){
+            child = {name: path, text: '',children: []}
+            temp.children[index + 1] = child;
+          }
+
           temp = child;
         }
         temp.children.push({name, text: token.text, children: []});
