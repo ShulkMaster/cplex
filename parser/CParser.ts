@@ -53,10 +53,11 @@ export class CParser {
         continue;
       }
       const productions = this.table.getDerivations(lastDerivation as Derivations, name);
-      temp = this.makeBranch(temp);
       this.stack.pop();
+      temp = this.makeBranch(temp);
       this.stack.push(...productions);
     }
+    console.log(this.stack);
     return parsed;
   }
 
