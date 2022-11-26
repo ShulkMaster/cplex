@@ -28,10 +28,12 @@ const Rules = ['Whitespace', 'Newline', 'BlockComment',
 
 type TerminalRules = ObjectFromList<typeof Rules>;
 
-export type Terminal = keyof TerminalRules | '';
+export type Terminal = keyof TerminalRules | '' | 'EOF';
 
 export type Derivations =
-  | DeclarationSet;
+  | DeclarationSet
+  | 'compilationUnitA'
+  | 'compilationUnit';
 
 export type CSyntax = Production<Derivations>;
 

@@ -1,4 +1,4 @@
-int
-static int
-const typedef
-char float
+int x;
+static int madres;
+const float pi;
+char float xd;
