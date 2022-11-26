@@ -1,35 +1,46 @@
 import {ISyntax, ISyntaxProvider} from './ISyntaxProvider';
+import {mapSet, ProductionSet} from './Set';
 
-export type DeclarationDerivation =
-  | 'declarationSpecifiers'
-  | 'declarationSpecifier'
-  | 'typeSpecifier'
-  | 'storageClassSpecifier'
+export type TypeSpecifier = 'typeSpecifier';
+
+export type DeclarationSpecifier = 'declarationSpecifier';
+
+export type DeclarationSpecifiers = 'declarationSpecifiers';
+
+export type DeclarationSet =
+  | TypeSpecifier
+  | DeclarationSpecifier
+  | DeclarationSpecifiers
   ;
 
-const DeclarationSyntax: ISyntax<DeclarationDerivation> = {
-  declarationSpecifier: {
-    Const: ['Const'],
-    Static: ['storageClassSpecifier'],
-    Typedef: ['storageClassSpecifier'],
-    Char: ['typeSpecifier'],
-    Int: ['typeSpecifier'],
-    Float: ['typeSpecifier'],
-  },
-  declarationSpecifiers: undefined,
-  storageClassSpecifier: {
-    Typedef: ['Typedef', null],
-    Static: ['Static', null],
-  },
-  typeSpecifier: {
-    Char: ['Char', null],
-    Int: ['Int', null],
-    Float: ['Float', null],
-  }
+const typeSpecifier: ProductionSet = {
+  Void: ['Void'],
+  Char: ['Char'],
+  Short: ['Short'],
+  Int: ['Int'],
+  Float: ['Float'],
+  Bool: ['Bool'],
 };
 
-export const DeclarationSyntaxProvider: ISyntaxProvider<DeclarationDerivation> = {
-  getSyntax(): ISyntax<DeclarationDerivation> {
-    return DeclarationSyntax;
-  }
-}
+const declarationSpecifier: ProductionSet = {
+  Const: ['Const'],
+  Static: ['Static'],
+  ...mapSet(typeSpecifier, ['typeSpecifier']),
+};
+
+const declarationSpecifiers: ProductionSet = {
+  Identifier: [''],
+  ...mapSet(declarationSpecifier, [
+    'declarationSpecifier', 'declarationSpecifiers',
+  ]),
+};
+
+export const DeclarationSyntaxProvider: ISyntaxProvider<DeclarationSet> = {
+  getSyntax(): ISyntax<DeclarationSet> {
+    return {
+      typeSpecifier,
+      declarationSpecifier,
+      declarationSpecifiers,
+    };
+  },
+};

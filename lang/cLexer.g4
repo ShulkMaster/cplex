@@ -38,6 +38,7 @@ Int : 'int';
 Long : 'long';
 Return : 'return';
 Short : 'short';
+Bool : 'bool';
 Signed : 'signed';
 Sizeof : 'sizeof';
 Static : 'static';
@@ -46,8 +47,9 @@ Switch : 'switch';
 Typedef : 'typedef';
 Unsigned : 'unsigned';
 Void : 'void';
-Volatile : 'volatile';
 While : 'while';
+True: 'true';
+False: 'false';
 
 // puntuation
 LeftParen : '(';

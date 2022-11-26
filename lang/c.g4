@@ -4,238 +4,118 @@ options {
     tokenVocab=cLexer;
 }
 
-root: program* EOF;
+compilationUnit: compilationUnitPrime EOF;
 
-program:
-    | declaration
-    //| definition
-    //| initialization
+compilationUnitPrime: declaration | empty;
+
+empty:;
+
+externalDeclaration:
+  declaration
+  | functionDefinition
+  | Semi
+  ;
+
+functionDefinition: False;//todo
+
+declaration: declarationSpecifiers declarationPrime Semi;
+
+declarationPrime: empty | initDeclaratorList;
+
+declarationSpecifiers: declarationSpecifier declarationSpecifierPrime;
+
+declarationSpecifierPrime: declarationSpecifiers | empty;
+
+declarationSpecifier: Const | Static | typeSpecifier;
+
+typeSpecifier: Void | Char | Short | Int | Float | Bool | structSpecifier | Identifier;
+
+identifierPrime: Identifier | empty;
+
+specifierQualifierList
+    :   typeSpecifier specifierQualifierList?
+    |   Const specifierQualifierList?
     ;
 
-declaration
-    :   declarationSpecifiers initDeclaratorList? ';'
-    ;
+declaratorPrime: declarator | empty;
 
-initDeclaratorList
-    :   initDeclarator initDeclaratorFollow*
-    ;
-
-initDeclaratorFollow: ',' initDeclarator;
-
-declarationSpecifiers
-    :   declarationSpecifier+
-    ;
-
-initDeclarator
-    :   declarator ('=' initializer)?
-    ;
-
-declarationSpecifier
-    :   Const
-    |   typeSpecifier
-    |   storageClassSpecifier
-    ;
-
-storageClassSpecifier
-    :   'typedef'
-    |   'static'
-    ;
-
-typeSpecifier
-    :   ('void'
-    |   'char'
-    |   'short'
-    |   'int'
-    |   'long'
-    |   'float'
-    |   'double'
-    |   'signed'
-    |   'unsigned')
-    |   structSpecifier
-    |   enumSpecifier
-    |   Identifier
-    ;
-
-structSpecifier
-    :   Struct Identifier '{' structDeclaration+ '}'
-    |   Struct '{' structDeclaration+ '}'
-    |   Struct Identifier
-    ;
-
-structDeclaration
-    :   specifierQualifierList structDeclaratorList ';'
-    |   specifierQualifierList ';'
+structDeclarator
+    :   declarator
+    |   declaratorPrime ':' conditionalExpression
     ;
 
 structDeclaratorList
     :   structDeclarator (',' structDeclarator)*
     ;
 
-structDeclarator
-    :   declarator
-    |   declarator? ':' Constant
+// The first two rules have priority order and cannot be simplified to one expression.
+structDeclaration
+    :   specifierQualifierList structDeclaratorList ';'
+    |   specifierQualifierList ';'
     ;
 
-declarator
-    :   pointer? Identifier
+structDeclarationList
+    :   structDeclaration | structDeclaration structDeclarationList
     ;
 
-initializer
-    :   assignmentExpression
-    |   '{' initializerList ','? '}'
-    ;
+structOrSpecifierPrime: identifierPrime '{' structDeclarationList '}' | Identifier;
 
-initializerList
-    :   designation? initializer (',' designation? initializer)*
-    ;
+structSpecifier: Struct structOrSpecifierPrime;
 
-designation
-    :   designatorList '='
-    ;
+initDeclaratorList: initDeclarator initDeclaratorPrime;
 
-designatorList
-    :   designator+
-    ;
+initDeclaratorPrime: Comma initDeclarator | empty;
+
+initDeclarator: declarator Equal initializer;
+
+declarator: directDeclarator;
+
+directDeclarator: Identifier | LeftParen declarator RightParen;
+
+initializer:
+LeftBrace initializerList initializerPrime RightBrace
+| assignmentExpression
+;
+
+initializerPrime: Comma | empty;
 
 designator
-    :   '[' Const ']'
+    :   '[' conditionalExpression ']'
     |   '.' Identifier
     ;
 
+designatorList: designator designatorPrime;
+
+designatorPrime: designatorList | empty;
+
+designation: designatorList '=';
+
+designationPrime: designation | empty;
+
+initializerList: designationPrime initializer initializerListPrime;
+
+initializerListPrime: ',' designationPrime initializer;
+
+initializerListMega: initializerList | empty;
+
+logicalAndExpression: True; // rework
+
+logicalOrExpressionMega: logicalOrExpressionPrime | empty;
+
+logicalOrExpressionPrime: '||' logicalAndExpression logicalOrExpressionMega | empty;
+
+logicalOrExpression:  logicalAndExpression logicalOrExpressionPrime;
+
+conditionalExpressionPrime: '?' expression ':' conditionalExpression | empty;
+
+conditionalExpression: logicalOrExpression conditionalExpressionPrime;
+
 assignmentExpression
     :   conditionalExpression
-    |   unaryExpression assignmentOperator assignmentExpression
+    //|   unaryExpression assignmentOperator assignmentExpression
     |   DigitSequence // for
     ;
 
-conditionalExpression
-    :   logicalOrExpression ('?' expression ':' conditionalExpression)?
-    ;
+expression: assignmentExpression expressionPrime;
 
-logicalOrExpression
-    :   logicalAndExpression ( '||' logicalAndExpression)*
-    ;
-
-logicalAndExpression
-    :   inclusiveOrExpression ('&&' inclusiveOrExpression)*
-    ;
-
-inclusiveOrExpression
-    :   exclusiveOrExpression ('|' exclusiveOrExpression)*
-    ;
-
-exclusiveOrExpression
-    :   andExpression ('^' andExpression)*
-    ;
-
-andExpression
-    :   equalityExpression ( '&' equalityExpression)*
-    ;
-
-equalityExpression
-    :   relationalExpression (('=='| '!=') relationalExpression)*
-    ;
-
-relationalExpression
-    :   shiftExpression (('<'|'>'|'<='|'>=') shiftExpression)*
-    ;
-
-shiftExpression
-    :   additiveExpression (('<<'|'>>') additiveExpression)*
-    ;
-
-additiveExpression
-    :   multiplicativeExpression (('+'|'-') multiplicativeExpression)*
-    ;
-
-multiplicativeExpression
-    :   castExpression (('*'|'/'|'%') castExpression)*
-    ;
-
-castExpression
-    :   unaryExpression
-    |   DigitSequence
-    ;
-
-unaryExpression
-    :
-    ('++' |  '--' |  'sizeof')*
-    (postfixExpression
-    |   unaryOperator castExpression
-    |   'sizeof' '(' typeName ')'
-    |   '&&' Identifier // GCC extension address of label
-    )
-    ;
-
-typeName
-    :   specifierQualifierList abstractDeclarator?
-    ;
-
-pointer
-    :  (('*'|'^') Const?)+ // ^ - Blocks language extension
-    ;
-
-abstractDeclarator
-    :   pointer
-    |   pointer? directAbstractDeclarator
-    ;
-
-directAbstractDeclarator
-    :   '(' abstractDeclarator ')'
-    |   '[' Const? assignmentExpression? ']'
-    |   '[' 'static' Const? assignmentExpression ']'
-    |   '[' Const 'static' assignmentExpression ']'
-    |   '[' '*' ']'
-    |   '(' parameterTypeList? ')'
-    |   directAbstractDeclarator '[' Const? assignmentExpression? ']'
-    |   directAbstractDeclarator '[' 'static' Const? assignmentExpression ']'
-    |   directAbstractDeclarator '[' Const 'static' assignmentExpression ']'
-    |   directAbstractDeclarator '[' '*' ']'
-    |   directAbstractDeclarator '(' parameterTypeList? ')'
-    ;
-
-postfixExpression
-    :
-    (   primaryExpression
-    |   '__extension__'? '(' typeName ')' '{' initializerList ','? '}'
-    )
-    ('[' expression ']'
-    | '(' argumentExpressionList? ')'
-    | ('.' | '->') Identifier
-    | ('++' | '--')
-    )*
-    ;
-
-parameterTypeList
-    :   parameterList (',' '...')?
-    ;
-
-parameterList
-    :   parameterDeclaration (',' parameterDeclaration)*
-    ;
-
-parameterDeclaration
-    :   declarationSpecifiers declarator
-    |   declarationSpecifiers abstractDeclarator?
-    ;
-
-specifierQualifierList
-    :   (typeSpecifier| Const) specifierQualifierList?
-    ;
-
-enumSpecifier
-    :   'enum' Identifier? '{' enumeratorList ','? '}'
-    |   'enum' Identifier
-    ;
-
-enumeratorList
-    :   enumerator enumaratorFollow*
-    ;
-
-enumaratorFollow: ',' enumerator;
-
-enumerator
-    :   Identifier enumeratorAssign?
-    ;
-
-enumeratorAssign: '=' IntegerConstant;
+expressionPrime: ',' assignmentExpression | empty;
