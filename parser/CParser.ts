@@ -4,10 +4,11 @@ import {DeclarationSyntaxProvider} from '../syntax/DeclarationSyntax.js';
 import type {Terminal} from '../syntax';
 import {Derivation, Derivations} from '../syntax';
 
-type ParseNode = {
+export type ParseNode = {
   name: string;
   text: string;
   children: ParseNode[];
+  up: ParseNode | null;
 }
 
 export class CParser {
@@ -19,7 +20,7 @@ export class CParser {
   constructor(lex: cLexer) {
     this.lex = lex;
     this.table.addSyntaxProvider(DeclarationSyntaxProvider);
-    this.stack.push('declarationSpecifier');
+    this.stack.push('compilationUnit');
   }
 
   private getLast(): Derivation {
@@ -27,47 +28,43 @@ export class CParser {
     return this.stack[size];
   }
 
-  private getLastIndex(arr: Array<any>): number {
-    return Math.max(0, arr.length - 1);
-  }
-
   public parse(): ParseNode {
     const names = this.lex.getSymbolicNames() as Terminal[];
-    const parsed: ParseNode = {name: 'root', text: 'root', children: []};
+    const parsed: ParseNode = {name: 'compilationUnit', text: '', children: [], up: null};
+    let temp: ParseNode = parsed;
     let token = this.lex.nextToken();
-    console.log(`(${names[token.type]}) -> ${token.text}`);
     while (token.type !== -1) {
       const name = names[token.type];
       const lastDerivation = this.getLast();
-      if (lastDerivation === null) {
-        this.stack.pop();
+      if (lastDerivation === '') {
         this.stack.pop();
         continue;
       }
       if (lastDerivation === name) {
-        let temp = parsed;
-        for (let i = 0; i < this.stack.length - 1; i++) {
-          const path = this.stack[i];
-          if(path === null) continue;
-          const index = this.getLastIndex(temp.children);
-          let child = temp.children[index];
-          if(!child || child.name !== path){
-            child = {name: path, text: '',children: []}
-            temp.children[index + 1] = child;
-          }
-
-          temp = child;
-        }
-        temp.children.push({name, text: token.text, children: []});
+        temp.children.push({name, text: token.text, children: [], up: temp.up});
         this.stack.pop();
         console.log(`(${name}) -> ${token.text}`);
         token = this.lex.nextToken();
+        temp = temp.up;
         continue;
       }
       const productions = this.table.getDerivations(lastDerivation as Derivations, name);
+      this.stack.pop();
       this.stack.push(...productions);
+      temp = this.makeBranch(temp);
     }
+    console.log(this.stack);
     return parsed;
+  }
+
+  private makeBranch(parent: ParseNode): ParseNode {
+    const last = this.getLast();
+    if (!this.table.isNonTerminal(last) || last === parent.name) {
+      return parent;
+    }
+    const child = {name: last, text: '', children: [], up: parent};
+    parent.children.push(child);
+    return child;
   }
 }
 

@@ -1,14 +1,25 @@
 import {Derivation, Derivations, Terminal} from 'syntax';
 import {ISyntax, ISyntaxProvider} from './ISyntaxProvider';
+import {declaration} from './DeclarationSyntax.js'
+import {mapSet} from './Set.js';
 
 export class SyntaxTable {
   private readonly _cSyntaxRules: ISyntax<Derivations>;
 
   constructor() {
-    this._cSyntaxRules = {} as ISyntax<Derivations>;
+    this._cSyntaxRules = {
+      compilationUnit: {
+        EOF: ['compilationUnitA', 'EOF'],
+        ...mapSet(declaration, ['compilationUnitA', 'EOF']),
+      },
+      compilationUnitA: {
+        EOF: [''],
+        ...mapSet(declaration, ['declaration', 'compilationUnitA']),
+      }
+    } as ISyntax<Derivations>;
   }
 
-  public addSyntaxProvider(syntaxProvider: ISyntaxProvider<Derivations>): void {
+  public addSyntaxProvider<T extends Derivations>(syntaxProvider: ISyntaxProvider<T>): void {
     const syntax = syntaxProvider.getSyntax();
     for (const [key, value] of Object.entries(syntax)) {
       const production = this._cSyntaxRules[key];
@@ -30,5 +41,9 @@ export class SyntaxTable {
     const rules = chain[term];
     if (!rules) return undefined;
     return [...rules].reverse();
+  }
+
+  public isNonTerminal(der: Derivation): boolean {
+    return Boolean(this._cSyntaxRules[der]);
   }
 }
