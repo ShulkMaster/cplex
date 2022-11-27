@@ -30,13 +30,19 @@ functionDefinition ::= ) fD1
 fD1 ::= compoundStatement
 fD1 ::= ;
 
-declaration ::= declarationSpecifiers Identifier
+declaration ::= declarationSpecifiers Identifier declarationPrime
+
+declarationPrime ::= , declaration
+
+declarationPrime ::= ''
+
+declarationPrime ::= ;
 
 compoundStatement ::= { bI }
 
 bI ::= ''
 bI ::= blockItemList
 
-blockItemList ::= blockItem blockItemList
+blockItemList ::= blockItem bI
 
 blockItem ::= declaration
