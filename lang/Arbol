@@ -1,0 +1,42 @@
+compilationUnitA ::=externalDeclaration compilationUnitA
+externalDeclaration ::= declarationSpecifiers Identifier declaratorPrime
+declaratorPrime ::= ;
+declaratorPrime ::= ( functionDefinition
+
+compilationUnitA::=''
+
+declarationSpecifiers ::= declarationSpecifier declarationSpecifiers
+declarationSpecifiers ::= ''
+declarationSpecifier ::= Const
+declarationSpecifier ::= Static
+declarationSpecifier ::= typeSpecifier
+
+typeSpecifier ::= Char
+typeSpecifier ::= Int
+typeSpecifier ::= Bool
+
+declarator::= ''
+declarator::= Identifier initDeclaratorList
+
+initializer::= = initializerList
+initializer::= ''
+
+initializerList::= Constant
+initializerList::= { Constant }
+
+functionDefinition ::= declaration ) fD1
+functionDefinition ::= ) fD1
+
+fD1 ::= compoundStatement
+fD1 ::= ;
+
+declaration ::= declarationSpecifiers Identifier
+
+compoundStatement ::= { bI }
+
+bI ::= ''
+bI ::= blockItemList
+
+blockItemList ::= blockItem blockItemList
+
+blockItem ::= declaration
