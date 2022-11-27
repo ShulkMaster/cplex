@@ -28,10 +28,6 @@ export class CParser {
     return this.stack[size];
   }
 
-  private getLastIndex(arr: Array<any>): number {
-    return Math.max(0, arr.length - 1);
-  }
-
   public parse(): ParseNode {
     const names = this.lex.getSymbolicNames() as Terminal[];
     const parsed: ParseNode = {name: 'compilationUnit', text: '', children: [], up: null};
@@ -54,8 +50,8 @@ export class CParser {
       }
       const productions = this.table.getDerivations(lastDerivation as Derivations, name);
       this.stack.pop();
-      temp = this.makeBranch(temp);
       this.stack.push(...productions);
+      temp = this.makeBranch(temp);
     }
     console.log(this.stack);
     return parsed;
@@ -63,12 +59,12 @@ export class CParser {
 
   private makeBranch(parent: ParseNode): ParseNode {
     const last = this.getLast();
-    if (last === '' || !this.table.isNonTerminal(last) || last === parent.name) {
+    if (!this.table.isNonTerminal(last) || last === parent.name) {
       return parent;
     }
-    const child = {name: last, text: '', children: [], up: parent };
+    const child = {name: last, text: '', children: [], up: parent};
     parent.children.push(child);
-         return child;
+    return child;
   }
 }
 
