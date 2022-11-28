@@ -7,15 +7,7 @@ export class SyntaxTable {
   private readonly _cSyntaxRules: ISyntax<Derivations>;
 
   constructor() {
-    this._cSyntaxRules = {
-      compilationUnit: {
-        EOF: ['compilationUnitA', 'EOF'],
-      },
-      compilationUnitA: {
-        EOF: [''],
-        ...mapSet(declaration, ['declaration', 'compilationUnitA']),
-      }
-    } as ISyntax<Derivations>;
+    this._cSyntaxRules = {} as ISyntax<Derivations>;
   }
 
   public addSyntaxProvider<T extends Derivations>(syntaxProvider: ISyntaxProvider<T>): void {

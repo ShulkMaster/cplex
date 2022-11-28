@@ -1,5 +1,5 @@
 import {ISyntax, ISyntaxProvider} from './ISyntaxProvider';
-import {mapSet, ProductionSet} from './Set.js';
+import {ProductionSet} from './Set.js';
 
 export type FuncDeclaration = 'FuncDeclaration';
 export type FuncDeclarationPrime = 'FuncDeclarationPrime';
@@ -9,8 +9,7 @@ export type FD1 = 'fD1';
 export type functionDefinition = 'functionDefinition';
 
 
-
-export type FunctionSet = 
+export type FunctionSet =
 | FuncDeclaration
 | FuncDeclarationPrime
 | compoundStatement
@@ -47,8 +46,6 @@ const fD1: ProductionSet = {
   Semi: ['Semi'],
   LeftBrace: ['compoundStatement']
 }
-
-const bi: ProductionSet = {}
 
 const functionDefinition: ProductionSet = {
   Const: ['declaration', 'fD1'],

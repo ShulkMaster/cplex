@@ -1,10 +1,11 @@
-import { DeclarationSet, declarationSpecifier } from './DeclarationSyntax';
-import { FunctionSet } from './functionSyntax';
-import { ExpressionSet } from './ExpressionSyntax';
-import { StamentSet } from './StamentSyntax';
-import { ISyntax, ISyntaxProvider } from './ISyntaxProvider';
-import { type } from 'os';
-import { mapSet } from './Set';
+import { DeclarationSet, declarationSpecifier } from './DeclarationSyntax.js';
+import type { FunctionSet } from './functionSyntax';
+import type { ExpressionSet } from './ExpressionSyntax';
+import type { StamentSet } from './StamentSyntax';
+import type { ISyntax, ISyntaxProvider } from './ISyntaxProvider';
+import { mapSet } from './Set.js';
+
+export * from './functionSyntax.js';
 
 export type Production<T extends string> = {
   [k in T]: T;

@@ -102,9 +102,10 @@ const declaratorPrime: ProductionSet = {
   Semi: ['initDeclaratorListPrime', 'initializer', 'Semi'],
   LeftParen: ['LeftParen', 'functionDefinition'],
   Comma: ['Comma', 'Identifier', 'initDeclaratorListPrime'],
+  Assign: ['initDeclaratorListPrime', 'initializer', 'Semi'],
 };
 
-const externalDeclaration: ProductionSet = mapSet(typeSpecifier,
+const externalDeclaration: ProductionSet = mapSet(declarationSpecifier,
   ['declarationSpecifiers', 'Identifier', 'declaratorPrime']
 );
 

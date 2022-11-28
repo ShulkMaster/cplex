@@ -2,7 +2,12 @@ import cLexer from 'lexer/cLexer.js';
 import {SyntaxTable} from '../syntax/SyntaxTable.js';
 import {DeclarationSyntaxProvider} from '../syntax/DeclarationSyntax.js';
 import type {Terminal} from '../syntax';
-import {Derivation, Derivations} from '../syntax';
+import {
+  Derivation,
+  Derivations,
+  cSyntaxProvider,
+  FunctionSyntaxProvider,
+} from '../syntax/index.js';
 
 export type ParseNode = {
   name: string;
@@ -19,7 +24,9 @@ export class CParser {
 
   constructor(lex: cLexer) {
     this.lex = lex;
+    this.table.addSyntaxProvider(cSyntaxProvider);
     this.table.addSyntaxProvider(DeclarationSyntaxProvider);
+    this.table.addSyntaxProvider(FunctionSyntaxProvider);
     this.stack.push('compilationUnit');
   }
 
@@ -49,6 +56,11 @@ export class CParser {
         continue;
       }
       const productions = this.table.getDerivations(lastDerivation as Derivations, name);
+      if(productions === undefined){
+        console.log(`Se esperaba ${lastDerivation}\n`);
+        console.log(this.stack);
+        throw Error('Parse exception');
+      }
       this.stack.pop();
       this.stack.push(...productions);
       temp = this.makeBranch(temp);
