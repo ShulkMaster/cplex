@@ -9,10 +9,10 @@ compilationUnitA::=''
 initDeclaratorListPrime ::= Comma Identifier initDeclaratorListPrime
 initDeclaratorListPrime ::= ''
 
-declarationSpecifiers ::= declarationSpecifier declarationSpecifiersPrime 
+declarationSpecifiers ::= declarationSpecifier declarationSpecifiersPrime
 
 declarationSpecifiersPrime ::= ''
-declarationSpecifiersPrime ::= declarationSpecifiers 
+declarationSpecifiersPrime ::= declarationSpecifiers
 
 declarationSpecifier ::= Const
 declarationSpecifier ::= Static
@@ -26,7 +26,7 @@ initializer ::= Assign initializerList
 initializer ::= ''
 
 initializerList ::= LeftBrace Constant RightBrace
-initializerList ::= expression 
+initializerList ::= expression
 
 functionDefinition ::= declaration fD1
 functionDefinition ::= RightParen fD1
@@ -49,10 +49,10 @@ bI ::= blockItemList
 
 blockItemList ::= blockItem bI
 
-blockItem ::= FuncDeclaration 
+blockItem ::= FuncDeclaration
 blockItem ::= statement
 
-statementPrime ::= statement statementPrime 
+statementPrime ::= statement statementPrime
 statementPrime ::= ''
 statementPrime ::= FuncDeclaration
 
@@ -129,7 +129,7 @@ multiplicativeExpression ::= Mod castExpression multiplicativeExpression
 multiplicativeExpression ::= ''
 
 castExpression ::= unaryExpression
-castExpression ::= constanExpression 
+castExpression ::= constanExpression
 castExpression ::= Identifier invokeExpression
 
 invokeExpression ::= LeftParen expression RightParen
@@ -141,7 +141,7 @@ constanExpression ::= True
 constanExpression ::= False
 constanExpression ::= StringLiteral
 
-unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha 
+unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha
 
 unaryExpressionAlpha ::= unaryOperator castExpression
 unaryExpressionAlpha ::= typeSpecifier //todo check this!

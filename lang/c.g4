@@ -1,121 +1,151 @@
-parser grammar c;
+compilationUnitA ::=externalDeclaration compilationUnitA
+externalDeclaration ::= declarationSpecifiers Identifier declaratorPrime
+declaratorPrime ::= initDeclaratorListPrime initializer ;
+declaratorPrime ::= ( functionDefinition
 
-options {
-    tokenVocab=cLexer;
-}
+// int x = int x;|
+compilationUnitA::=''
 
-compilationUnit: compilationUnitPrime EOF;
+initDeclaratorListPrime: Comma Identifier initDeclaratorListPrime
+initDeclaratorListPrime ::= ''
 
-compilationUnitPrime: declaration | empty;
+declarationSpecifiers ::= declarationSpecifier declarationSpecifiersPrime
 
-empty:;
+declarationSpecifiersPrime ::= ''
+declarationSpecifiersPrime ::= declarationSpecifiers
 
-externalDeclaration:
-  declaration
-  | functionDefinition
-  | Semi
-  ;
+declarationSpecifier ::= Const
+declarationSpecifier ::= Static
+declarationSpecifier ::= typeSpecifier
 
-functionDefinition: False;//todo
+typeSpecifier ::= Char
+typeSpecifier ::= Int
+typeSpecifier ::= Bool
 
-declaration: declarationSpecifiers declarationPrime Semi;
+initializer ::= = initializerList
+initializer ::= ''
 
-declarationPrime: empty | initDeclaratorList;
+initializerList ::= { Constant }
+initializerList ::= expression
 
-declarationSpecifiers: declarationSpecifier declarationSpecifierPrime;
+functionDefinition ::= declaration fD1
+functionDefinition ::= ) fD1
 
-declarationSpecifierPrime: declarationSpecifiers | empty;
+fD1 ::= compoundStatement
+fD1 ::= ;
 
-declarationSpecifier: Const | Static | typeSpecifier;
+declaration ::= declarationSpecifiers Identifier declarationPrime
+declarationPrime ::= , declaration
+declarationPrime ::= )
 
-typeSpecifier: Void | Char | Short | Int | Float | Bool | structSpecifier | Identifier;
+FuncDeclaration ::= declarationSpecifiers Identifier FuncDeclarationPrime
+FuncDeclarationPrime ::= , FuncDeclaration
+FuncDeclarationPrime ::= initializer ;
 
-identifierPrime: Identifier | empty;
+compoundStatement ::= Lef bI }
 
-specifierQualifierList
-    :   typeSpecifier specifierQualifierList?
-    |   Const specifierQualifierList?
-    ;
+bI ::= ''
+bI ::= blockItemList
 
-declaratorPrime: declarator | empty;
+blockItemList ::= blockItem bI
 
-structDeclarator
-    :   declarator
-    |   declaratorPrime ':' conditionalExpression
-    ;
+blockItem ::= FuncDeclaration
+blockItem ::= statement
 
-structDeclaratorList
-    :   structDeclarator (',' structDeclarator)*
-    ;
+statementPrime ::= statement statementPrime
+statementPrime ::= ''
+statementPrime ::= FuncDeclaration
 
-// The first two rules have priority order and cannot be simplified to one expression.
-structDeclaration
-    :   specifierQualifierList structDeclaratorList ';'
-    |   specifierQualifierList ';'
-    ;
+statement ::= iterationStatement
+statement ::= compoundStatement
+statement ::= expressionStatement
+statement ::= selectionStatement
 
-structDeclarationList
-    :   structDeclaration | structDeclaration structDeclarationList
-    ;
+iterationStatement ::= For ( forCondition ) { statementPrime }
 
-structOrSpecifierPrime: identifierPrime '{' structDeclarationList '}' | Identifier;
+forCondition ::= forDeclaration assignmentExpression ; assignmentExpression
 
-structSpecifier: Struct structOrSpecifierPrime;
+forDeclaration ::= FuncDeclaration
 
-initDeclaratorList: initDeclarator initDeclaratorPrime;
+assignmentExpression ::= conditionalExpression
+expressionStatement ::= expression ;
 
-initDeclaratorPrime: Comma initDeclarator | empty;
+// this is redundat and is added in case we need it later
+expression ::= conditionalExpression expressionPrime
+expressionPrime ::= , conditionalExpression
+expressionPrime ::= ''
 
-initDeclarator: declarator Equal initializer;
+conditionalExpression ::= logicalOrExpression conditionalExpressionPrime
+conditionalExpressionPrime ::= ? expression : conditionalExpression
+conditionalExpressionPrime ::= ''
 
-declarator: directDeclarator;
+logicalOrExpression ::= logicalAndExpression logicalOrExpressionPrime
+logicalOrExpressionPrime ::= || logicalAndExpression logicalOrExpressionPrime
+logicalOrExpressionPrime ::= ''
 
-directDeclarator: Identifier | LeftParen declarator RightParen;
+logicalAndExpression ::= inclusiveOrExpression logicalAndExpressionPrime
+logicalAndExpressionPrime ::= && inclusiveOrExpression logicalAndExpressionPrime
+logicalAndExpressionPrime ::= ''
 
-initializer:
-LeftBrace initializerList initializerPrime RightBrace
-| assignmentExpression
-;
+inclusiveOrExpression ::= exclusiveOrExpression inclusiveOrExpressionPrime
+inclusiveOrExpressionPrime ::= | exclusiveOrExpression inclusiveOrExpressionPrime
+inclusiveOrExpressionPrime ::= ''
 
-initializerPrime: Comma | empty;
+exclusiveOrExpression ::= andExpression exclusiveOrExpressionPrime
+exclusiveOrExpressionPrime ::= ^ andExpression exclusiveOrExpressionPrime
+exclusiveOrExpressionPrime ::= ''
 
-designator
-    :   '[' conditionalExpression ']'
-    |   '.' Identifier
-    ;
+andExpression ::= equalityExpression andExpressionPrime
+andExpressionPrime ::= & equalityExpression andExpressionPrime
+andExpressionPrime ::= ''
 
-designatorList: designator designatorPrime;
+equalityExpression ::= relationalExpression equalityExpressionPrime
+equalityExpressionPrime ::= == relationalExpression equalityExpressionPrime
+equalityExpressionPrime ::= != relationalExpression equalityExpressionPrime
+equalityExpressionPrime ::= ''
 
-designatorPrime: designatorList | empty;
+relationalExpression ::= shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= < shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= > shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= <= shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= >= shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= ''
 
-designation: designatorList '=';
+shiftExpression ::= additiveExpression shiftExpressionPrime
+shiftExpressionPrime ::= << additiveExpression shiftExpressionPrime
+shiftExpressionPrime ::= >> additiveExpression shiftExpressionPrime
+shiftExpressionPrime ::= ''
 
-designationPrime: designation | empty;
+additiveExpression ::= multiplicativeExpression additiveExpressionPrime
+additiveExpressionPrime ::= + multiplicativeExpression additiveExpressionPrime
+additiveExpressionPrime ::= - multiplicativeExpression additiveExpressionPrime
+additiveExpressionPrime ::= ''
 
-initializerList: designationPrime initializer initializerListPrime;
+multiplicativeExpression ::= castExpression multiplicativeExpression
+multiplicativeExpression ::= * castExpression multiplicativeExpression
+multiplicativeExpression ::= / castExpression multiplicativeExpression
+multiplicativeExpression ::= % castExpression multiplicativeExpression
+multiplicativeExpression ::= ''
 
-initializerListPrime: ',' designationPrime initializer;
+castExpression ::= unaryExpression
+castExpression ::= DigitSequence
+castExpression ::= constantExpression
+castExpression ::= Identifier
 
-initializerListMega: initializerList | empty;
+constantExpression ::= Constant
 
-logicalAndExpression: True; // rework
+unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha
 
-logicalOrExpressionMega: logicalOrExpressionPrime | empty;
+unaryExpressionAlpha ::= unaryOperator castExpression
+unaryExpressionAlpha ::= typeSpecifier
 
-logicalOrExpressionPrime: '||' logicalAndExpression logicalOrExpressionMega | empty;
+unaryExpressionPrime ::= ++
+unaryExpressionPrime ::= --
 
-logicalOrExpression:  logicalAndExpression logicalOrExpressionPrime;
+unaryOperator ::= +
+unaryOperator ::= -
 
-conditionalExpressionPrime: '?' expression ':' conditionalExpression | empty;
+selectionStatement ::= if ( expression ) compoundStatement selectionStatementPrime
+selectionStatementPrime ::= else statement
+selectionStatementPrime ::= ''
 
-conditionalExpression: logicalOrExpression conditionalExpressionPrime;
-
-assignmentExpression
-    :   conditionalExpression
-    //|   unaryExpression assignmentOperator assignmentExpression
-    |   DigitSequence // for
-    ;
-
-expression: assignmentExpression expressionPrime;
-
-expressionPrime: ',' assignmentExpression | empty;
