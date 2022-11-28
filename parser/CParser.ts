@@ -10,6 +10,7 @@ import {
   statementSyntaxProvider,
   expressionSyntaxProvider,
 } from '../syntax/index.js';
+import antlr4 from 'antlr4';
 
 export type ParseNode = {
   name: string;
@@ -61,9 +62,7 @@ export class CParser {
       }
       const productions = this.table.getDerivations(lastDerivation as Derivations, name);
       if(productions === undefined){
-        console.log(`Se esperaba ${lastDerivation}\n`);
-        console.log(this.stack);
-        throw Error('Parse exception');
+        this.printHumanError(token)
       }
       this.stack.pop();
       this.stack.push(...productions);
@@ -71,6 +70,22 @@ export class CParser {
     }
     console.log(this.stack);
     return parsed;
+  }
+  printHumanError(token: antlr4.Token) {
+    let missingToken: string = ''
+
+    for (let i = this.stack.length - 1; i >= 0 ; i--) {
+      let aux = this.table.isNonTerminal(this.stack[i]);
+      if (!aux) {
+        missingToken = this.stack[i];
+        break;
+      }
+    }
+
+    console.log(this.lex.getSymbolicNames[token.type])
+    console.log(token.text)
+    console.log(`Se esperaba: ${missingToken}, en pos: ${token.line} : ${token.column}`);
+    throw new Error('ParserException');
   }
 
   private makeBranch(parent: ParseNode): ParseNode {
