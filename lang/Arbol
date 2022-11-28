@@ -3,7 +3,6 @@ externalDeclaration ::= declarationSpecifiers Identifier declaratorPrime
 declaratorPrime ::= initDeclaratorListPrime initializer Semi
 declaratorPrime ::= LeftParen functionDefinition
 
-// int x = int x;|
 compilationUnitA::=''
 
 initDeclaratorListPrime ::= Comma Identifier initDeclaratorListPrime
@@ -71,7 +70,6 @@ forDeclaration ::= FuncDeclaration
 assignmentExpression ::= conditionalExpression
 expressionStatement ::= expression Semi
 
-// this is redundat and is added in case we need it later
 expression ::= conditionalExpression expressionPrime
 expressionPrime ::= Comma conditionalExpression expressionPrime
 expressionPrime ::= ''
@@ -144,9 +142,8 @@ constanExpression ::= StringLiteral
 unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha
 
 unaryExpressionAlpha ::= unaryOperator castExpression
-unaryExpressionAlpha ::= typeSpecifier //todo check this!
+unaryExpressionAlpha ::= typeSpecifier
 
-//todo add Not
 unaryExpressionPrime ::= PlusPlus
 unaryExpressionPrime ::= MinusMinus
 
