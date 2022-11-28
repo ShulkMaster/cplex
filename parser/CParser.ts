@@ -1,12 +1,14 @@
 import cLexer from 'lexer/cLexer.js';
 import {SyntaxTable} from '../syntax/SyntaxTable.js';
-import {DeclarationSyntaxProvider} from '../syntax/DeclarationSyntax.js';
 import type {Terminal} from '../syntax';
 import {
   Derivation,
   Derivations,
   cSyntaxProvider,
+  DeclarationSyntaxProvider,
   FunctionSyntaxProvider,
+  statementSyntaxProvider,
+  expressionSyntaxProvider,
 } from '../syntax/index.js';
 
 export type ParseNode = {
@@ -27,6 +29,8 @@ export class CParser {
     this.table.addSyntaxProvider(cSyntaxProvider);
     this.table.addSyntaxProvider(DeclarationSyntaxProvider);
     this.table.addSyntaxProvider(FunctionSyntaxProvider);
+    this.table.addSyntaxProvider(statementSyntaxProvider);
+    this.table.addSyntaxProvider(expressionSyntaxProvider);
     this.stack.push('compilationUnit');
   }
 

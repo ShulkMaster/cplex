@@ -5,7 +5,10 @@ import type { StamentSet } from './StamentSyntax';
 import type { ISyntax, ISyntaxProvider } from './ISyntaxProvider';
 import { mapSet } from './Set.js';
 
+export * from './DeclarationSyntax.js';
 export * from './functionSyntax.js';
+export * from './StamentSyntax.js';
+export * from './ExpressionSyntax.js';
 
 export type Production<T extends string> = {
   [k in T]: T;
