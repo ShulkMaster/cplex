@@ -60,6 +60,7 @@ statement ::= iterationStatement
 statement ::= compoundStatement
 statement ::= expressionStatement
 statement ::= selectionStatement
+statement ::= return expressionStatement
 
 iterationStatement ::= For ( forCondition ) { statementPrime }
 
@@ -80,15 +81,15 @@ conditionalExpressionPrime ::= ? expression : conditionalExpression
 conditionalExpressionPrime ::= ''
 
 logicalOrExpression ::= logicalAndExpression logicalOrExpressionPrime
-logicalOrExpressionPrime ::= || logicalAndExpression logicalOrExpressionPrime
+logicalOrExpressionPrime ::= OrOr logicalAndExpression logicalOrExpressionPrime
 logicalOrExpressionPrime ::= ''
 
 logicalAndExpression ::= inclusiveOrExpression logicalAndExpressionPrime
-logicalAndExpressionPrime ::= && inclusiveOrExpression logicalAndExpressionPrime
+logicalAndExpressionPrime ::= AndAnd inclusiveOrExpression logicalAndExpressionPrime
 logicalAndExpressionPrime ::= ''
 
 inclusiveOrExpression ::= exclusiveOrExpression inclusiveOrExpressionPrime
-inclusiveOrExpressionPrime ::= | exclusiveOrExpression inclusiveOrExpressionPrime
+inclusiveOrExpressionPrime ::= Or exclusiveOrExpression inclusiveOrExpressionPrime
 inclusiveOrExpressionPrime ::= ''
 
 exclusiveOrExpression ::= andExpression exclusiveOrExpressionPrime
@@ -96,7 +97,7 @@ exclusiveOrExpressionPrime ::= ^ andExpression exclusiveOrExpressionPrime
 exclusiveOrExpressionPrime ::= ''
 
 andExpression ::= equalityExpression andExpressionPrime
-andExpressionPrime ::= & equalityExpression andExpressionPrime
+andExpressionPrime ::= And equalityExpression andExpressionPrime
 andExpressionPrime ::= ''
 
 equalityExpression ::= relationalExpression equalityExpressionPrime
@@ -129,13 +130,16 @@ multiplicativeExpression ::= ''
 
 castExpression ::= unaryExpression
 castExpression ::= constanExpression 
-castExpression ::= Identifier
+castExpression ::= Identifier invokeExpression
 
+invokeExpression ::= ( params )
+invokeExpression ::= ''
 
 constanExpression ::= Constant
 constanExpression ::= DigitSequence
 constanExpression ::= True
 constanExpression ::= False
+constanExpression ::= StringLiteral
 
 unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha 
 
