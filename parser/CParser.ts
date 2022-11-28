@@ -86,8 +86,6 @@ export class CParser {
       }
     }
 
-    console.log(this.lex.getSymbolicNames()[errorToken.type]);
-    console.log(errorToken.text);
     const sourceLine = token.getInputStream().toString().split(/\n/)[errorToken.line - 1];
     const errorLocation = errorToken.column + (errorToken.stop - errorToken.start);
     console.error(`Se esperaba: ${missingToken}, en pos: ${errorToken.line} : ${errorLocation + 2 }`);

@@ -9,12 +9,15 @@ const charStream = new antlr4.InputStream(stream.toString());
 const lexer = new cLexer(charStream);
 const parser = new CParser(lexer);
 
-const ast = parser.parse();
-
 function clear(ast: ParseNode): void {
   delete ast.up;
   ast.children.forEach(clear);
 }
 
-clear(ast);
-writeFileSync('out/ast.json', JSON.stringify(ast, undefined, 2));
+try{
+  const ast = parser.parse();
+  clear(ast);
+  writeFileSync('out/ast.json', JSON.stringify(ast, undefined, 2));
+} catch (e){
+  console.error('Error de parseo');
+}
