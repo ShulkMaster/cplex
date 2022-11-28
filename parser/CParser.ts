@@ -22,8 +22,9 @@ export type ParseNode = {
 export class CParser {
 
   private readonly lex: cLexer;
-  readonly table = new SyntaxTable();
+  private readonly table = new SyntaxTable();
   private readonly stack: Derivation[] = [];
+  private lastToken: antlr4.Token | undefined = undefined;
 
   constructor(lex: cLexer) {
     this.lex = lex;
@@ -45,6 +46,7 @@ export class CParser {
     const parsed: ParseNode = {name: 'compilationUnit', text: '', children: [], up: null};
     let temp: ParseNode = parsed;
     let token = this.lex.nextToken();
+    this.lastToken = token;
     while (token.type !== -1) {
       const name = names[token.type];
       const lastDerivation = this.getLast();
@@ -56,13 +58,14 @@ export class CParser {
         temp.children.push({name, text: token.text, children: [], up: temp.up});
         this.stack.pop();
         console.log(`(${name}) -> ${token.text}`);
+        this.lastToken = token;
         token = this.lex.nextToken();
         temp = temp.up;
         continue;
       }
       const productions = this.table.getDerivations(lastDerivation as Derivations, name);
-      if(productions === undefined){
-        this.printHumanError(token)
+      if (productions === undefined) {
+        this.printHumanError(token);
       }
       this.stack.pop();
       this.stack.push(...productions);
@@ -71,10 +74,11 @@ export class CParser {
     console.log(this.stack);
     return parsed;
   }
-  printHumanError(token: antlr4.Token) {
-    let missingToken: string = ''
 
-    for (let i = this.stack.length - 1; i >= 0 ; i--) {
+  private printHumanError(token: antlr4.Token) {
+    let missingToken: string = '';
+    const errorToken = this.lastToken || token;
+    for (let i = this.stack.length - 1; i >= 0; i--) {
       let aux = this.table.isNonTerminal(this.stack[i]);
       if (!aux) {
         missingToken = this.stack[i];
@@ -82,9 +86,14 @@ export class CParser {
       }
     }
 
-    console.log(this.lex.getSymbolicNames[token.type])
-    console.log(token.text)
-    console.log(`Se esperaba: ${missingToken}, en pos: ${token.line} : ${token.column}`);
+    console.log(this.lex.getSymbolicNames()[errorToken.type]);
+    console.log(errorToken.text);
+    const sourceLine = token.getInputStream().toString().split(/\n/)[errorToken.line - 1];
+    const errorLocation = errorToken.column + (errorToken.stop - errorToken.start);
+    console.error(`Se esperaba: ${missingToken}, en pos: ${errorToken.line} : ${errorLocation + 2 }`);
+    console.error(sourceLine);
+    const pad = ''.padStart(errorLocation) + '^';
+    console.error(pad);
     throw new Error('ParserException');
   }
 
