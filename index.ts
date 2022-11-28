@@ -33,7 +33,20 @@ for (let x = 1; x < csvData.data.length; x++) {
       continue;
     }
     if (token && productions) {
-      //console.log(`[${prod}:${tokenName}] -> ${token}`);
+      const ruleList = token.split(/::=/)[1].trim().split(' ');
+      let areEqual = ruleList.length === productions.length;
+      for (let i = 0; i < ruleList.length; i++){
+        let rule = ruleList[i];
+        if(rule === 'ε'){
+          rule = '';
+        }
+        areEqual = areEqual && rule === productions[i];
+      }
+      if(!areEqual){
+        console.log(`[${prod}:${tokenName}] -> No son iguales`);
+        console.log(`\t[expected] -> ${ruleList.join(' ')}`);
+        console.log(`\t[actual] -> ${productions.join(' ')}`);
+      }
     }
     if (!token && productions) {
       console.log(`[${prod}:${tokenName}] -> No deberia existir`);
