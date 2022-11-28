@@ -128,9 +128,14 @@ multiplicativeExpression ::= % castExpression multiplicativeExpression
 multiplicativeExpression ::= ''
 
 castExpression ::= unaryExpression
-castExpression ::= DigitSequence
-castExpression ::= Constant
+castExpression ::= constanExpression 
 castExpression ::= Identifier
+
+
+constanExpression ::= Constant
+constanExpression ::= DigitSequence
+constanExpression ::= True
+constanExpression ::= False
 
 unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha 
 
