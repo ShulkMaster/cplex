@@ -103,7 +103,7 @@ const initializerList: ProductionSet = {
 const declaratorPrime: ProductionSet = {
   Semi: ['initDeclaratorListPrime', 'initializer', 'Semi'],
   LeftParen: ['LeftParen', 'functionDefinition'],
-  Comma: ['Comma', 'Identifier', 'initDeclaratorListPrime'],
+  Comma: ['initDeclaratorListPrime', 'initializer', 'Semi'],
   Assign: ['initDeclaratorListPrime', 'initializer', 'Semi'],
 };
 

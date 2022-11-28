@@ -278,7 +278,7 @@ const andExpressionPrime: ProductionSet = {
   AndAnd: [''],
   Or: [''],
   Caret: [''],
-  And: [''],
+  And: ['And', 'equalityExpression', 'andExpressionPrime'],
 }
 
 const andExpression: ProductionSet = mapSet(equalityExpression, [
@@ -352,7 +352,7 @@ const conditionalExpressionPrime: ProductionSet = {
   Semi: [''],
   Comma: [''],
   RightParen: [''],
-  Question: ['Question', 'Colon', 'expression', 'conditionalExpression'],
+  Question: ['Question', 'expression', 'Colon', 'conditionalExpression'],
   Colon: ['']
 };
 

@@ -148,10 +148,10 @@ const statementPrime: ProductionSet = {
     RightBrace: [''],
 };
 
-const blockItem: ProductionSet = mapSet(statementPrime, ['statement']);
-delete blockItem.RightBrace;
-
-
+const blockItem: ProductionSet = {
+    ...mapSet(statement, ['statement']),
+    ...mapSet(declarationSpecifier, ['FuncDeclaration']),
+}
 
 const blockItemList: ProductionSet = mapSet(statementPrime, ['blockItem', 'bI']);
 delete blockItemList.RightBrace;
