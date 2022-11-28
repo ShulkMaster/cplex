@@ -139,7 +139,10 @@ constanExpression ::= True
 constanExpression ::= False
 constanExpression ::= StringLiteral
 
-unaryExpression ::= unaryExpressionPrime
+unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha
+
+unaryExpressionAlpha ::= unaryOperator castExpression
+unaryExpressionAlpha ::= ''
 
 unaryExpressionPrime ::= PlusPlus
 unaryExpressionPrime ::= MinusMinus
