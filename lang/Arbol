@@ -36,6 +36,10 @@ declaration ::= declarationSpecifiers Identifier declarationPrime
 declarationPrime ::= , declaration
 declarationPrime ::= )
 
+FuncDeclaration ::= declarationSpecifiers Identifier FuncDeclarationPrime
+FuncDeclarationPrime ::= , FuncDeclaration
+FuncDeclarationPrime ::= initializer ;
+
 compoundStatement ::= { bI }
 
 bI ::= ''
@@ -43,7 +47,7 @@ bI ::= blockItemList
 
 blockItemList ::= blockItem bI
 
-blockItem ::= declaration
+blockItem ::= FuncDeclaration 
 blockItem ::= statement
 
 statement ::= iterationStatement
