@@ -26,13 +26,15 @@ initializer ::= ''
 initializerList::= Constant
 initializerList::= { Constant }
 
-functionDefinition ::= declaration ) fD1
+functionDefinition ::= declaration fD1
 functionDefinition ::= ) fD1
 
 fD1 ::= compoundStatement
 fD1 ::= ;
 
-declaration ::= declarationSpecifiers Identifier 
+declaration ::= declarationSpecifiers Identifier declarationPrime
+declarationPrime ::= , declaration
+declarationPrime ::= )
 
 compoundStatement ::= { bI }
 
