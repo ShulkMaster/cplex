@@ -144,8 +144,9 @@ constanExpression ::= StringLiteral
 unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha 
 
 unaryExpressionAlpha ::= unaryOperator castExpression
-unaryExpressionAlpha ::= typeSpecifier
+unaryExpressionAlpha ::= typeSpecifier //todo check this!
 
+//todo add Not
 unaryExpressionPrime ::= PlusPlus
 unaryExpressionPrime ::= MinusMinus
 

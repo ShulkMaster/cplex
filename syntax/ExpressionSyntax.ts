@@ -11,9 +11,17 @@ export type inclusiveOrExpression= 'inclusiveOrExpression';
 export type inclusiveOrExpressionPrime = 'inclusiveOrExpressionPrime';
 export type exclusiveOrExpression = 'exclusiveOrExpression';
 export type ConstanExpression = 'constanExpression';
+export type selectionStatement = 'selectionStatement';
 export type selectionStatementPrime = 'selectionStatementPrime';
 export type castExpression = 'castExpression';
 export type InvokeExpression = 'invokeExpression';
+export type unaryExpression = 'unaryExpression';
+export type unaryExpressionAlpha = 'unaryExpressionAlpha';
+export type unaryExpressionPrime = 'unaryExpressionPrime';
+export type unaryOperator = 'unaryOperator';
+export type MultiplicativeExpression = 'multiplicativeExpression';
+export type additiveExpressionPrime = ''
+
 
 export type ExpressionSet =
   | conditionalExpression  
@@ -26,9 +34,15 @@ export type ExpressionSet =
   | inclusiveOrExpressionPrime
   | exclusiveOrExpression
   | ConstanExpression
+  | selectionStatement
   | selectionStatementPrime
   | castExpression
   | InvokeExpression
+  | unaryExpression
+  | MultiplicativeExpression
+  | unaryExpressionAlpha
+  | unaryExpressionPrime 
+  | unaryOperator
   | 'expression'
   ;
 
@@ -43,19 +57,70 @@ export type ExpressionSet =
 
   const  castExpression: ProductionSet = {
     Identifier: ['Identifier', 'invokeExpression'], 
-    PlusPlus: ['unaryExpression'],  
+    PlusPlus: ['unaryExpression'],
+    MinusMinus: ['unaryExpression'], 
     ...mapSet(ConstanExpression, ['ConstanExpression']),
   }
   
+  const  unaryExpression: ProductionSet = {
+    PlusPlus: ['unaryExpressionPrime' 'unaryExpressionAlpha'],
+    MinusMinus: ['unaryExpressionPrime' 'unaryExpressionAlpha'], 
+  }
+  
+  const  unaryExpressionAlpha: ProductionSet = {
+    Char: ['typeSpecifier'],
+    Int: ['typeSpecifier'], 
+    PlusPlus: ['unaryOperator' 'castExpression'],
+    MinusMinus: ['unaryOperator' 'castExpression'], 
+  }
+  
+  const  unaryExpressionPrime: ProductionSet = {
+    PlusPlus: ['PlusPlus'],
+    MinusMinus: ['MinusMinus'], 
+  }
+  
+  const  unaryOperator: ProductionSet = {
+    Plus: ['Plus'],
+    Minus: ['Minus'], 
+  }
+
   const invokeExpression: ProductionSet = {
     Identifier: [''],
     Semi:[''],
+    LeftParen: ['LeftParen', 'expression', 'RightParen'],
     Comma: [''],
     Constant: [''],
     RightParen: [''],
-    LeftBrace: ['LeftParen', 'expression', 'RightParen'],
     Question: [''],
     Colon: [''],
+    OrOr: [''],
+    AndAnd: [''],
+    Or: [''],
+    Caret: [''],
+    And: [''],    
+    Equal: [''],
+    NotEqual: [''],
+    Less: [''],
+    Greater: [''],
+    LessEqual: [''],
+    GreaterEqual: [''],
+    LeftShift: [''],
+    RightShift: [''],
+    Plus: [''],
+    Minus: [''],
+    Star: [''],
+    Div: [''],
+    Mod: [''],
+    DigitSequence: [''],
+    True: [''],
+    False: [''],
+    StringLiteral: [''],
+    PlusPlus: [''],
+    MinusMinus: [''],    
+  }
+
+  const multiplicativeExpression: ProductionSet = {
+
   }
 
 const conditionalExpression: ProductionSet = {
@@ -99,6 +164,10 @@ const conditionalExpressionPrime: ProductionSet = {
 };
 
 
+const selectionStatement: ProductionSet = {
+  If: ['If', 'LeftParent', 'expression', 'RightParen', 'compoundStatement', 'selectionStatementPrime']
+}
+
 const selectionStatementPrime: ProductionSet = {
   Identifier: [''],
   Semi: [''],
@@ -108,4 +177,39 @@ const selectionStatementPrime: ProductionSet = {
   Char: [''],
   Int: [''],
   Bool: [''],
+  LeftBrace: [''],
+  Constant: [''],
+  RightBrace: [''],
+  Return: [''],
+  For: [''],
+  Question: [''],
+  OrOr: [''],
+  AndAnd: [''],
+  Or: [''],
+  Caret: [''],
+  And: [''],
+  Equal: [''],
+  NotEqual: [''],
+  Less: [''],
+  Greater: [''],
+  LessEqual: [''],
+  GreaterEqual: [''],
+  LeftShift: [''],
+  RightShift: [''],
+  Plus: [''],
+  Minus: [''],
+  Star: [''],
+  Div: [''],
+  Mod: [''],
+  DigitSequence: [''],
+  True: [''],
+  False: [''],
+  StringLiteral: [''],
+  PlusPlus: [''],
+  MinusMinus: [''],
+  If: [''],
+  Else: ['Else Statement'],
+  
 };
+
+export expressionSyntaxProvider: ISynta
