@@ -1,12 +1,22 @@
 compilationUnitA ::=externalDeclaration compilationUnitA
-externalDeclaration ::= declarationSpecifiers Identifier declaratorPrime
-declaratorPrime ::= ;
+externalDeclaration ::= declarationSpecifiers Identifier initDeclaratorListPrime 
+declaratorPrime ::= initDeclaratorList ;
 declaratorPrime ::= ( functionDefinition
 
+// int x = int x;|
 compilationUnitA::=''
+
+initDeclaratorList ::= initDeclarator initDeclaratorListPrime 
+initDeclaratorListPrime ::= , Identifier initDeclaratorList
+initDeclaratorListPrime ::= ''
+
+initDeclarator ::= declaration initDeclaratorPrime 
+initDeclaratorPrime ::= = initializer
+initDeclaratorPrime ::= ''
 
 declarationSpecifiers ::= declarationSpecifier declarationSpecifiers
 declarationSpecifiers ::= ''
+
 declarationSpecifier ::= Const
 declarationSpecifier ::= Static
 declarationSpecifier ::= typeSpecifier
@@ -15,11 +25,8 @@ typeSpecifier ::= Char
 typeSpecifier ::= Int
 typeSpecifier ::= Bool
 
-declarator::= ''
-declarator::= Identifier initDeclaratorList
-
-initializer::= = initializerList
-initializer::= ''
+initializer ::= = initializerList
+initializer ::= ''
 
 initializerList::= Constant
 initializerList::= { Constant }
@@ -30,13 +37,7 @@ functionDefinition ::= ) fD1
 fD1 ::= compoundStatement
 fD1 ::= ;
 
-declaration ::= declarationSpecifiers Identifier declarationPrime
-
-declarationPrime ::= , declaration
-
-declarationPrime ::= ''
-
-declarationPrime ::= ;
+declaration ::= declarationSpecifiers Identifier 
 
 compoundStatement ::= { bI }
 
@@ -46,3 +47,96 @@ bI ::= blockItemList
 blockItemList ::= blockItem bI
 
 blockItem ::= declaration
+blockItem ::= statement
+
+statement ::= iterationStatement
+statement ::= compoundStatement
+statement ::= expressionStatement
+statement ::= selectionStatement
+
+iterationStatement ::= For ( forCondition ) statement
+
+forCondition ::= forDeclaration ; forExpression ; forExpression
+//forCondition ::= expression ; forExpression ; forExpression
+
+forDeclaration ::= declaration
+
+forExpression ::= assignmentExpression forExpressionPrime
+forExpressionPrime ::= , assignmentExpression
+forExpressionPrime ::= ''
+
+expressionStatement ::= expression ;
+
+// this is redundat and is added in case we need it later
+expression ::= conditionalExpression expressionPrime
+expressionPrime ::= , conditionalExpression
+expressionPrime ::= ''
+
+conditionalExpression ::= logicalOrExpression conditionalExpressionPrime
+conditionalExpressionPrime ::= ? expression : conditionalExpression
+conditionalExpressionPrime ::= ''
+
+logicalOrExpression ::= logicalAndExpression logicalOrExpressionPrime
+logicalOrExpressionPrime ::= || logicalAndExpression logicalOrExpressionPrime
+logicalOrExpressionPrime ::= ''
+
+logicalAndExpression ::= inclusiveOrExpression logicalAndExpressionPrime
+logicalAndExpressionPrime ::= && inclusiveOrExpression logicalAndExpressionPrime
+logicalAndExpressionPrime ::= ''
+
+inclusiveOrExpression ::= exclusiveOrExpression inclusiveOrExpressionPrime
+inclusiveOrExpressionPrime ::= | exclusiveOrExpression inclusiveOrExpressionPrime
+inclusiveOrExpressionPrime ::= ''
+
+exclusiveOrExpression ::= andExpression exclusiveOrExpressionPrime
+exclusiveOrExpressionPrime ::= ^ andExpression exclusiveOrExpressionPrime
+exclusiveOrExpressionPrime ::= ''
+
+andExpression ::= equalityExpression andExpressionPrime
+andExpressionPrime ::= & equalityExpression andExpressionPrime
+andExpressionPrime ::= ''
+
+equalityExpression ::= relationalExpression equalityExpressionPrime
+equalityExpressionPrime ::= == relationalExpression equalityExpressionPrime
+equalityExpressionPrime ::= != relationalExpression equalityExpressionPrime
+equalityExpressionPrime ::= ''
+
+relationalExpression ::= shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= < shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= > shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= <= shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= >= shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= ''
+
+shiftExpression ::= additiveExpression shiftExpressionPrime
+shiftExpressionPrime ::= << additiveExpression shiftExpressionPrime
+shiftExpressionPrime ::= >> additiveExpression shiftExpressionPrime
+shiftExpressionPrime ::= ''
+
+additiveExpression ::= multiplicativeExpression additiveExpressionPrime
+additiveExpressionPrime ::= + multiplicativeExpression additiveExpressionPrime
+additiveExpressionPrime ::= - multiplicativeExpression additiveExpressionPrime
+additiveExpressionPrime ::= ''
+
+multiplicativeExpression ::= castExpression multiplicativeExpression
+multiplicativeExpression ::= * castExpression multiplicativeExpression
+multiplicativeExpression ::= / castExpression multiplicativeExpression
+multiplicativeExpression ::= % castExpression multiplicativeExpression
+multiplicativeExpression ::= ''
+
+castExpression ::= unaryExpression
+castExpression ::= DigitSequence
+
+unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha 
+
+unaryExpressionAlpha ::= unaryOperator castExpression
+unaryExpressionAlpha ::= typeSpecifier
+unaryExpressionAlpha ::= && Identifier
+
+unaryExpressionPrime ::= ++
+unaryExpressionPrime ::= --
+
+selectionStatement ::= if ( expression ) compoundStatement selectionStatementPrime
+selectionStatementPrime ::= else statement
+selectionStatementPrime ::= ''
+
