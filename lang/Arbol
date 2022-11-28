@@ -52,12 +52,15 @@ blockItemList ::= blockItem bI
 blockItem ::= FuncDeclaration 
 blockItem ::= statement
 
+statementPrime ::= statement statementPrime 
+statementPrime ::= ''
+
 statement ::= iterationStatement
 statement ::= compoundStatement
 statement ::= expressionStatement
 statement ::= selectionStatement
 
-iterationStatement ::= For ( forCondition ) statement
+iterationStatement ::= For ( forCondition ) { statementPrime }
 
 forCondition ::= forDeclaration assignmentExpression ; assignmentExpression
 
