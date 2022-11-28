@@ -6,10 +6,15 @@ export type TypeSpecifier = 'typeSpecifier';
 export type DeclarationSpecifier = 'declarationSpecifier';
 
 export type DeclarationSpecifiers = 'declarationSpecifiers';
+export type DeclarationSpecifiersPrime = 'declarationSpecifiersPrime';
 
 export type Declarator = 'declarator';
 
 export type DeclaratorList = 'initDeclaratorList';
+
+export type Initializer = 'initializer';
+
+export type InitializerList = 'initializerList';
 
 export type DeclarationSet =
   | TypeSpecifier
@@ -17,8 +22,10 @@ export type DeclarationSet =
   | DeclarationSpecifiers
   | Declarator
   | DeclaratorList
-  | 'declaration'
-  ;
+  | DeclarationSpecifiersPrime
+  | Initializer
+  | InitializerList
+  | 'declaration';
 
 const typeSpecifier: ProductionSet = {
   Void: ['Void'],
@@ -29,17 +36,20 @@ const typeSpecifier: ProductionSet = {
   Bool: ['Bool'],
 };
 
-const declarationSpecifier: ProductionSet = {
+export const declarationSpecifier: ProductionSet = {
   Const: ['Const'],
   Static: ['Static'],
   ...mapSet(typeSpecifier, ['typeSpecifier']),
 };
 
-const declarationSpecifiers: ProductionSet = {
+const declarationSpecifiers: ProductionSet = mapSet(declarationSpecifier, [
+  'declarationSpecifier',
+  'declarationSpecifiersPrime',
+]);
+
+const declarationSpecifiersPrime: ProductionSet = {
   Identifier: [''],
-  ...mapSet(declarationSpecifier, [
-    'declarationSpecifier', 'declarationSpecifiers',
-  ]),
+  ...mapSet(declarationSpecifiers, ['declarationSpecifiers']),
 };
 
 const declarator: ProductionSet = {
@@ -54,22 +64,31 @@ const initDeclaratorList: ProductionSet = {
 
 export const declaration: ProductionSet = {
   ...mapSet(declarationSpecifiers, [
-      'declarationSpecifiers',
-      'initDeclaratorList',
-      'Semi',
-    ],
-  ),
+    'declarationSpecifiers',
+    'initDeclaratorList',
+    'Semi',
+  ]),
 };
+
+export const initializer: ProductionSet = {
+  Semi: [''],
+  Equal: ['Equal', 'initializerList']
+}
+
+const initializerList: ProductionSet = {  }
 
 export const DeclarationSyntaxProvider: ISyntaxProvider<DeclarationSet> = {
   getSyntax(): ISyntax<DeclarationSet> {
     return {
       typeSpecifier,
+      declarationSpecifiersPrime,
       declarationSpecifier,
       declarationSpecifiers,
       declarator,
       initDeclaratorList,
       declaration,
+      initializer,
+      initializerList
     };
   },
 };

@@ -1,75 +1,47 @@
 import {ISyntax, ISyntaxProvider} from './ISyntaxProvider';
 import {mapSet, ProductionSet} from './Set.js';
 
-export type TypeSpecifier = 'typeSpecifier';
+export type FuncDeclaration = 'FuncDeclaration';
+export type FuncDeclarationPrime = 'FuncDeclarationPrime';
+export type CompoundStatement = 'compoundStatement'
+export type Bi = 'bI'
 
-export type DeclarationSpecifier = 'declarationSpecifier';
+export type FunctionSet = 
+| FuncDeclaration
+| FuncDeclarationPrime
+| CompoundStatement
+| Bi
+;
 
-export type DeclarationSpecifiers = 'declarationSpecifiers';
 
-export type Declarator = 'declarator';
-
-export type DeclaratorList = 'initDeclaratorList';
-
-export type DeclarationSet =
-  | TypeSpecifier
-  | DeclarationSpecifier
-  | DeclarationSpecifiers
-  | Declarator
-  | DeclaratorList
-  | 'declaration'
-  ;
-
-const typeSpecifier: ProductionSet = {
-  Void: ['Void'],
-  Char: ['Char'],
-  Short: ['Short'],
-  Int: ['Int'],
-  Float: ['Float'],
-  Bool: ['Bool'],
+const FuncDeclaration: ProductionSet  = {
+  Const: ['declarationSpecifiers', 'Identifier', 'FuncDeclarationPrime'],
+  Static: ['declarationSpecifiers', 'Identifier', 'FuncDeclarationPrime'],
+  Char: ['declarationSpecifiers', 'Identifier', 'FuncDeclarationPrime'],
+  Int: ['declarationSpecifiers', 'Identifier', 'FuncDeclarationPrime'],
+  Bool: ['declarationSpecifiers', 'Identifier', 'FuncDeclarationPrime'],
 };
 
-const declarationSpecifier: ProductionSet = {
-  Const: ['Const'],
-  Static: ['Static'],
-  ...mapSet(typeSpecifier, ['typeSpecifier']),
-};
+const FuncDeclarationPrime: ProductionSet = {
+  Semi: ['initializer', 'Semi'],
+  Comma: ['Comma', 'FuncDeclaration'],
+  Equal: ['initializer', 'Semi'],
 
-const declarationSpecifiers: ProductionSet = {
-  Identifier: [''],
-  ...mapSet(declarationSpecifier, [
-    'declarationSpecifier', 'declarationSpecifiers',
-  ]),
-};
+}
 
-const declarator: ProductionSet = {
-  Semi: [''],
-  Equal: [''],
-  Comma: ['Comma', 'Identifier', 'initDeclaratorList'],
-};
+const compoundStatement: ProductionSet = {
+  LeftBrace: ['LeftBrace', 'bI', 'RightBrace']
+}
 
-const initDeclaratorList: ProductionSet = {
-  Identifier: ['Identifier', 'declarator'],
-};
+const bi: ProductionSet = {}
 
-export const declaration: ProductionSet = {
-  ...mapSet(declarationSpecifiers, [
-      'declarationSpecifiers',
-      'initDeclaratorList',
-      'Semi',
-    ],
-  ),
-};
-
-export const DeclarationSyntaxProvider: ISyntaxProvider<DeclarationSet> = {
-  getSyntax(): ISyntax<DeclarationSet> {
+export const FunctionSyntaxProvider: ISyntaxProvider<FunctionSet> = {
+  getSyntax(): ISyntax<FunctionSet> {
     return {
-      typeSpecifier,
-      declarationSpecifier,
-      declarationSpecifiers,
-      declarator,
-      initDeclaratorList,
-      declaration,
+      FuncDeclaration,
+      FuncDeclarationPrime,
+      compoundStatement,
+      bi,
     };
   },
 };

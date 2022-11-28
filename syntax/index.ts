@@ -1,4 +1,6 @@
 import {DeclarationSet} from './DeclarationSyntax';
+import {FunctionSet} from './functionSyntax';
+import {ExpressionSet} from './ExpressionSyntax';
 
 export type Production<T extends string> = {
   [k in T]: T;
@@ -32,6 +34,8 @@ export type Terminal = keyof TerminalRules | '' | 'EOF';
 
 export type Derivations =
   | DeclarationSet
+  | FunctionSet
+  | ExpressionSet
   | 'compilationUnitA'
   | 'compilationUnit';
 
