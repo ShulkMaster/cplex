@@ -25,8 +25,8 @@ typeSpecifier ::= Bool
 initializer ::= = initializerList
 initializer ::= ''
 
-initializerList::= Constant
-initializerList::= { Constant }
+initializerList ::= { Constant }
+initializerList ::= expression 
 
 functionDefinition ::= declaration fD1
 functionDefinition ::= ) fD1
@@ -54,6 +54,7 @@ blockItem ::= statement
 
 statementPrime ::= statement statementPrime 
 statementPrime ::= ''
+statementPrime ::= FuncDeclaration
 
 statement ::= iterationStatement
 statement ::= compoundStatement
