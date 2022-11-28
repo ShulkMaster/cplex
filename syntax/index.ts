@@ -1,7 +1,10 @@
-import {DeclarationSet} from './DeclarationSyntax';
-import {FunctionSet} from './functionSyntax';
-import {ExpressionSet} from './ExpressionSyntax';
+import { DeclarationSet, declarationSpecifier } from './DeclarationSyntax';
+import { FunctionSet } from './functionSyntax';
+import { ExpressionSet } from './ExpressionSyntax';
 import { StamentSet } from './StamentSyntax';
+import { ISyntax, ISyntaxProvider } from './ISyntaxProvider';
+import { type } from 'os';
+import { mapSet } from './Set';
 
 export type Production<T extends string> = {
   [k in T]: T;
@@ -33,18 +36,37 @@ type TerminalRules = ObjectFromList<typeof Rules>;
 
 export type Terminal = keyof TerminalRules | '' | 'EOF';
 
+export type UnitSet =
+  | 'compilationUnitA'
+  | 'compilationUnit'
+  ;
+
 export type Derivations =
   | DeclarationSet
   | FunctionSet
   | ExpressionSet
   | StamentSet
-  | 'compilationUnitA'
-  | 'compilationUnit';
+  | UnitSet
+  ;
 
 export type CSyntax = Production<Derivations>;
 
 export type Derivation = Terminal | keyof CSyntax;
 
+export const cSyntaxProvider: ISyntaxProvider<UnitSet> = {
+  getSyntax(): ISyntax<UnitSet> {
+    return {
+      compilationUnitA: {
+        "EOF": [''],
+        ...mapSet(declarationSpecifier, ['externalDeclaration', 'compilationUnitA']),
+      },
+      compilationUnit: {
+        EOF: ['compilationUnitA', 'EOF'],
+        ...mapSet(declarationSpecifier, ['compilationUnitA', 'EOF']),
+      }
+    }
+  },
+}
 
 
 

@@ -10,7 +10,6 @@ export class SyntaxTable {
     this._cSyntaxRules = {
       compilationUnit: {
         EOF: ['compilationUnitA', 'EOF'],
-        ...mapSet(declaration, ['compilationUnitA', 'EOF']),
       },
       compilationUnitA: {
         EOF: [''],
