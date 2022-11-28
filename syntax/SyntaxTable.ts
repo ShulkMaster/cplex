@@ -1,7 +1,6 @@
 import {Derivation, Derivations, Terminal} from 'syntax';
 import {ISyntax, ISyntaxProvider} from './ISyntaxProvider';
-import {declaration} from './DeclarationSyntax.js'
-import {mapSet} from './Set.js';
+import {ProductionSet} from './Set';
 
 export class SyntaxTable {
   private readonly _cSyntaxRules: ISyntax<Derivations>;
@@ -32,6 +31,10 @@ export class SyntaxTable {
     const rules = chain[term];
     if (!rules) return undefined;
     return [...rules].reverse();
+  }
+
+  public getRule(prod: Derivations): ProductionSet {
+    return  this._cSyntaxRules[prod];
   }
 
   public isNonTerminal(der: Derivation): boolean {

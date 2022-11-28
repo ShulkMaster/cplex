@@ -1,5 +1,6 @@
 import { ISyntax, ISyntaxProvider } from './ISyntaxProvider';
 import { mapSet, ProductionSet } from './Set.js';
+import {typeSpecifier} from './DeclarationSyntax.js';
 
 export type conditionalExpression = 'conditionalExpression';
 export type conditionalExpressionPrime = 'conditionalExpressionPrime';
@@ -70,9 +71,9 @@ export type ExpressionSet =
   ;
 
 const constanExpression: ProductionSet = {
-  Constant: ['Const'],
+  Constant: ['Constant'],
   DigitSequence: ['DigitSequence'],
-  True: ['DigitSequence'],
+  True: ['True'],
   False: ['False'],
   StringLiteral: ['StringLiteral'],
 }
@@ -90,10 +91,9 @@ const unaryExpression: ProductionSet = {
 }
 
 const unaryExpressionAlpha: ProductionSet = {
-  Char: ['typeSpecifier'],
-  Int: ['typeSpecifier'],
-  PlusPlus: ['unaryOperator', 'castExpression'],
-  MinusMinus: ['unaryOperator', 'castExpression'],
+  ...mapSet(typeSpecifier, ['typeSpecifier']),
+  Plus: ['unaryOperator', 'castExpression'],
+  Minus: ['unaryOperator', 'castExpression'],
 }
 
 const unaryExpressionPrime: ProductionSet = {
@@ -194,7 +194,7 @@ const additiveExpressionPrime: ProductionSet = {
   Minus: ['Minus', 'multiplicativeExpression', 'additiveExpressionPrime'],
 };
 
-const additiveExpression: ProductionSet = mapSet(multiplicativeExpression, 
+const additiveExpression: ProductionSet = mapSet(multiplicativeExpression,
   ['multiplicativeExpression', 'additiveExpressionPrime'],
 );
 

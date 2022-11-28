@@ -107,6 +107,7 @@ const expressionStatement: ProductionSet = {
     False: ['expression', 'Semi'],
     StringLiteral: ['expression', 'Semi'],
     MinusMinus: ['expression', 'Semi'],
+    PlusPlus:['expression', 'Semi'],
 }
 
 const assignmentExpression: ProductionSet = {
@@ -146,7 +147,7 @@ const statementPrime: ProductionSet = {
     ...mapSet(declarationSpecifier, ['FuncDeclaration']),
     RightBrace: [''],
 };
-    
+
 const blockItem: ProductionSet = mapSet(statementPrime, ['statement']);
 delete blockItem.RightBrace;
 

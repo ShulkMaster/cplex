@@ -21,7 +21,7 @@ export type ParseNode = {
 export class CParser {
 
   private readonly lex: cLexer;
-  private readonly table = new SyntaxTable();
+  readonly table = new SyntaxTable();
   private readonly stack: Derivation[] = [];
 
   constructor(lex: cLexer) {

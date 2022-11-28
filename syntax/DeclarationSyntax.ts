@@ -23,7 +23,7 @@ export type DeclarationSet =
   | ExternalDeclaration
   | 'declaration';
 
-const typeSpecifier: ProductionSet = {
+export const typeSpecifier: ProductionSet = {
   Void: ['Void'],
   Char: ['Char'],
   Short: ['Short'],
@@ -64,7 +64,7 @@ const initDeclaratorListPrime: ProductionSet = {
 
 export const initializer: ProductionSet = {
   Semi: [''],
-  Equal: ['Equal', 'initializerList']
+  Assign: ['Assign', 'initializerList']
 }
 
 const initializerList: ProductionSet = {
@@ -83,6 +83,8 @@ const initializerList: ProductionSet = {
   NotEqual: ['expression'],
   Less: ['expression'],
   LessEqual: ['expression'],
+  Greater:['expression'],
+  Div:['expression'],
   GreaterEqual: ['expression'],
   LeftShift: ['expression'],
   RightShift: ['expression'],
