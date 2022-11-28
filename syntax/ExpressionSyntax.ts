@@ -9,8 +9,6 @@ export type LogicalAndExpressionPrime = 'logicalAndExpressionPrime';
 export type inclusiveOrExpression = 'inclusiveOrExpression';
 export type exclusiveOrExpression = 'exclusiveOrExpression';
 export type ConstanExpression = 'constanExpression';
-export type selectionStatement = 'selectionStatement';
-export type selectionStatementPrime = 'selectionStatementPrime';
 export type castExpression = 'castExpression';
 export type InvokeExpression = 'invokeExpression';
 export type unaryExpression = 'unaryExpression';
@@ -196,22 +194,9 @@ const additiveExpressionPrime: ProductionSet = {
   Minus: ['Minus', 'multiplicativeExpression', 'additiveExpressionPrime'],
 };
 
-const additiveExpression: ProductionSet = {
-  Identifier: ['multiplicativeExpression', 'additiveExpressionPrime',],
-  Star: ['multiplicativeExpression', 'additiveExpressionPrime',],
-  Div: ['multiplicativeExpression', 'additiveExpressionPrime',],
-  Mod: ['multiplicativeExpression', 'additiveExpressionPrime',],
-  PlusPlus: ['multiplicativeExpression', 'additiveExpressionPrime',],
-  MinusMinus: ['multiplicativeExpression', 'additiveExpressionPrime',],
-  ...mapSet(additiveExpressionPrime, [
-    'multiplicativeExpression',
-    'additiveExpressionPrime',
-  ]),
-  ...mapSet(constanExpression, [
-    'multiplicativeExpression',
-    'additiveExpressionPrime',
-  ]),
-};
+const additiveExpression: ProductionSet = mapSet(multiplicativeExpression, 
+  ['multiplicativeExpression', 'additiveExpressionPrime'],
+);
 
 const shiftExpressionPrime: ProductionSet = {
   Semi: [''],
@@ -257,39 +242,9 @@ const relationalExpressionPrime: ProductionSet = {
   GreaterEqual: ['GreaterEqual', 'shiftExpression', 'relationalExpressionPrime'],
 }
 
-const relationalExpression: ProductionSet = {
-  Identifier: ['shiftExpression', 'relationalExpressionPrime'],
-  Semi: ['shiftExpression', 'relationalExpressionPrime'],
-  Comma: ['shiftExpression', 'relationalExpressionPrime'],
-  Constant: ['shiftExpression', 'relationalExpressionPrime'],
-  RightParen: ['shiftExpression', 'relationalExpressionPrime'],
-  Question: ['shiftExpression', 'relationalExpressionPrime'],
-  Colon: ['shiftExpression', 'relationalExpressionPrime'],
-  OrOr: ['shiftExpression', 'relationalExpressionPrime'],
-  AndAnd: ['shiftExpression', 'relationalExpressionPrime'],
-  Or: ['shiftExpression', 'relationalExpressionPrime'],
-  Caret: ['shiftExpression', 'relationalExpressionPrime'],
-  And: ['shiftExpression', 'relationalExpressionPrime'],
-  Equal: ['shiftExpression', 'relationalExpressionPrime'],
-  NotEqual: ['shiftExpression', 'relationalExpressionPrime'],
-  Less: ['shiftExpression', 'relationalExpressionPrime'],
-  Greater: ['shiftExpression', 'relationalExpressionPrime'],
-  LessEqual: ['shiftExpression', 'relationalExpressionPrime'],
-  GreaterEqual: ['shiftExpression', 'relationalExpressionPrime'],
-  LeftShift: ['shiftExpression', 'relationalExpressionPrime'],
-  RightShift: ['shiftExpression', 'relationalExpressionPrime'],
-  Plus: ['shiftExpression', 'relationalExpressionPrime'],
-  Minus: ['shiftExpression', 'relationalExpressionPrime'],
-  Star: ['shiftExpression', 'relationalExpressionPrime'],
-  Div: ['shiftExpression', 'relationalExpressionPrime'],
-  Mod: ['shiftExpression', 'relationalExpressionPrime'],
-  DigitSequence: ['shiftExpression', 'relationalExpressionPrime'],
-  True: ['shiftExpression', 'relationalExpressionPrime'],
-  False: ['shiftExpression', 'relationalExpressionPrime'],
-  StringLiteral: ['shiftExpression', 'relationalExpressionPrime'],
-  PlusPlus: ['shiftExpression', 'relationalExpressionPrime'],
-  MinusMinus: ['shiftExpression', 'relationalExpressionPrime'],
-};
+const relationalExpression: ProductionSet = mapSet(shiftExpression,
+  ['shiftExpression', 'relationalExpressionPrime'],
+);
 
 const equalityExpressionPrime: ProductionSet = {
   Semi: [''],
@@ -389,7 +344,7 @@ const logicalOrExpression: ProductionSet = mapSet(logicalAndExpression,
   ['logicalAndExpression', 'logicalOrExpressionPrime'],
 );
 
-const conditionalExpression: ProductionSet = mapSet(logicalOrExpression, 
+const conditionalExpression: ProductionSet = mapSet(logicalOrExpression,
   ['logicalOrExpression', 'conditionalExpressionPrime'],
 );
 
@@ -408,56 +363,9 @@ const expressionPrime: ProductionSet = {
   Colon: [''],
 }
 
-const expression: ProductionSet = mapSet(conditionalExpression, 
+const expression: ProductionSet = mapSet(conditionalExpression,
   ['conditionalExpression', 'expressionPrime'],
 );
-
-const selectionStatement: ProductionSet = {
-  If: ['If', 'LeftParen', 'expression', 'RightParen', 'compoundStatement', 'selectionStatementPrime']
-}
-
-const selectionStatementPrime: ProductionSet = {
-  Identifier: [''],
-  Semi: [''],
-  Comma: [''],
-  Const: [''],
-  Static: [''],
-  Char: [''],
-  Int: [''],
-  Bool: [''],
-  LeftBrace: [''],
-  Constant: [''],
-  RightBrace: [''],
-  Return: [''],
-  For: [''],
-  Question: [''],
-  OrOr: [''],
-  AndAnd: [''],
-  Or: [''],
-  Caret: [''],
-  And: [''],
-  Equal: [''],
-  NotEqual: [''],
-  Less: [''],
-  Greater: [''],
-  LessEqual: [''],
-  GreaterEqual: [''],
-  LeftShift: [''],
-  RightShift: [''],
-  Plus: [''],
-  Minus: [''],
-  Star: [''],
-  Div: [''],
-  Mod: [''],
-  DigitSequence: [''],
-  True: [''],
-  False: [''],
-  StringLiteral: [''],
-  PlusPlus: [''],
-  MinusMinus: [''],
-  If: [''],
-  Else: ['Else', 'statement'],
-};
 
 export const expressionSyntaxProvider: ISyntaxProvider<ExpressionSet> = {
   getSyntax(): ISyntax<ExpressionSet> {
