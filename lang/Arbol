@@ -1,12 +1,12 @@
 compilationUnitA ::=externalDeclaration compilationUnitA
 externalDeclaration ::= declarationSpecifiers Identifier declaratorPrime
-declaratorPrime ::= initDeclaratorListPrime initializer ;
-declaratorPrime ::= ( functionDefinition
+declaratorPrime ::= initDeclaratorListPrime initializer Semi
+declaratorPrime ::= LeftParen functionDefinition
 
 // int x = int x;|
 compilationUnitA::=''
 
-initDeclaratorListPrime ::= , Identifier initDeclaratorListPrime
+initDeclaratorListPrime ::= Comma Identifier initDeclaratorListPrime
 initDeclaratorListPrime ::= ''
 
 declarationSpecifiers ::= declarationSpecifier declarationSpecifiersPrime 
@@ -22,27 +22,27 @@ typeSpecifier ::= Char
 typeSpecifier ::= Int
 typeSpecifier ::= Bool
 
-initializer ::= = initializerList
+initializer ::= Assign initializerList
 initializer ::= ''
 
-initializerList ::= { Constant }
+initializerList ::= LeftBrace Constant RightBrace
 initializerList ::= expression 
 
 functionDefinition ::= declaration fD1
-functionDefinition ::= ) fD1
+functionDefinition ::= RightParen fD1
 
 fD1 ::= compoundStatement
-fD1 ::= ;
+fD1 ::= Semi
 
 declaration ::= declarationSpecifiers Identifier declarationPrime
-declarationPrime ::= , declaration
-declarationPrime ::= )
+declarationPrime ::= Comma declaration
+declarationPrime ::= RightParen
 
 FuncDeclaration ::= declarationSpecifiers Identifier FuncDeclarationPrime
-FuncDeclarationPrime ::= , FuncDeclaration
-FuncDeclarationPrime ::= initializer ;
+FuncDeclarationPrime ::= Comma FuncDeclaration
+FuncDeclarationPrime ::= initializer Semi
 
-compoundStatement ::= { bI }
+compoundStatement ::= LeftBrace bI RightBrace
 
 bI ::= ''
 bI ::= blockItemList
@@ -60,24 +60,24 @@ statement ::= iterationStatement
 statement ::= compoundStatement
 statement ::= expressionStatement
 statement ::= selectionStatement
-statement ::= return expressionStatement
+statement ::= Return expressionStatement
 
-iterationStatement ::= For ( forCondition ) { statementPrime }
+iterationStatement ::= For LeftParen forCondition RightParen LeftBrace statementPrime RightBrace
 
-forCondition ::= forDeclaration assignmentExpression ; assignmentExpression
+forCondition ::= forDeclaration assignmentExpression Semi assignmentExpression
 
 forDeclaration ::= FuncDeclaration
 
 assignmentExpression ::= conditionalExpression
-expressionStatement ::= expression ;
+expressionStatement ::= expression Semi
 
 // this is redundat and is added in case we need it later
 expression ::= conditionalExpression expressionPrime
-expressionPrime ::= , conditionalExpression
+expressionPrime ::= Comma conditionalExpression expressionPrime
 expressionPrime ::= ''
 
 conditionalExpression ::= logicalOrExpression conditionalExpressionPrime
-conditionalExpressionPrime ::= ? expression : conditionalExpression
+conditionalExpressionPrime ::= Question expression Colon conditionalExpression
 conditionalExpressionPrime ::= ''
 
 logicalOrExpression ::= logicalAndExpression logicalOrExpressionPrime
@@ -93,7 +93,7 @@ inclusiveOrExpressionPrime ::= Or exclusiveOrExpression inclusiveOrExpressionPri
 inclusiveOrExpressionPrime ::= ''
 
 exclusiveOrExpression ::= andExpression exclusiveOrExpressionPrime
-exclusiveOrExpressionPrime ::= ^ andExpression exclusiveOrExpressionPrime
+exclusiveOrExpressionPrime ::= Caret andExpression exclusiveOrExpressionPrime
 exclusiveOrExpressionPrime ::= ''
 
 andExpression ::= equalityExpression andExpressionPrime
@@ -101,38 +101,38 @@ andExpressionPrime ::= And equalityExpression andExpressionPrime
 andExpressionPrime ::= ''
 
 equalityExpression ::= relationalExpression equalityExpressionPrime
-equalityExpressionPrime ::= == relationalExpression equalityExpressionPrime
-equalityExpressionPrime ::= != relationalExpression equalityExpressionPrime
+equalityExpressionPrime ::= Equal relationalExpression equalityExpressionPrime
+equalityExpressionPrime ::= NotEqual relationalExpression equalityExpressionPrime
 equalityExpressionPrime ::= ''
 
 relationalExpression ::= shiftExpression relationalExpressionPrime
-relationalExpressionPrime ::= < shiftExpression relationalExpressionPrime
-relationalExpressionPrime ::= > shiftExpression relationalExpressionPrime
-relationalExpressionPrime ::= <= shiftExpression relationalExpressionPrime
-relationalExpressionPrime ::= >= shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= Less shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= Greater shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= LessEqual shiftExpression relationalExpressionPrime
+relationalExpressionPrime ::= GreaterEqual shiftExpression relationalExpressionPrime
 relationalExpressionPrime ::= ''
 
 shiftExpression ::= additiveExpression shiftExpressionPrime
-shiftExpressionPrime ::= << additiveExpression shiftExpressionPrime
-shiftExpressionPrime ::= >> additiveExpression shiftExpressionPrime
+shiftExpressionPrime ::= LeftShift additiveExpression shiftExpressionPrime
+shiftExpressionPrime ::= RightShift additiveExpression shiftExpressionPrime
 shiftExpressionPrime ::= ''
 
 additiveExpression ::= multiplicativeExpression additiveExpressionPrime
-additiveExpressionPrime ::= + multiplicativeExpression additiveExpressionPrime
-additiveExpressionPrime ::= - multiplicativeExpression additiveExpressionPrime
+additiveExpressionPrime ::= Plus multiplicativeExpression additiveExpressionPrime
+additiveExpressionPrime ::= Minus multiplicativeExpression additiveExpressionPrime
 additiveExpressionPrime ::= ''
 
 multiplicativeExpression ::= castExpression multiplicativeExpression
-multiplicativeExpression ::= * castExpression multiplicativeExpression
-multiplicativeExpression ::= / castExpression multiplicativeExpression
-multiplicativeExpression ::= % castExpression multiplicativeExpression
+multiplicativeExpression ::= Star castExpression multiplicativeExpression
+multiplicativeExpression ::= Div castExpression multiplicativeExpression
+multiplicativeExpression ::= Mod castExpression multiplicativeExpression
 multiplicativeExpression ::= ''
 
 castExpression ::= unaryExpression
 castExpression ::= constanExpression 
 castExpression ::= Identifier invokeExpression
 
-invokeExpression ::= ( params )
+invokeExpression ::= LeftParen expression RightParen
 invokeExpression ::= ''
 
 constanExpression ::= Constant
@@ -146,13 +146,13 @@ unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha
 unaryExpressionAlpha ::= unaryOperator castExpression
 unaryExpressionAlpha ::= typeSpecifier
 
-unaryExpressionPrime ::= ++
-unaryExpressionPrime ::= --
+unaryExpressionPrime ::= PlusPlus
+unaryExpressionPrime ::= MinusMinus
 
-unaryOperator ::= +
-unaryOperator ::= -
+unaryOperator ::= Plus
+unaryOperator ::= Minus
 
-selectionStatement ::= if ( expression ) compoundStatement selectionStatementPrime
-selectionStatementPrime ::= else statement
+selectionStatement ::= If LeftParen expression RightParen compoundStatement selectionStatementPrime
+selectionStatementPrime ::= Else statement
 selectionStatementPrime ::= ''
 
