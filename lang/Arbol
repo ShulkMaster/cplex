@@ -9,8 +9,10 @@ compilationUnitA::=''
 initDeclaratorListPrime ::= , Identifier initDeclaratorListPrime
 initDeclaratorListPrime ::= ''
 
-declarationSpecifiers ::= declarationSpecifier declarationSpecifiers
-declarationSpecifiers ::= ''
+declarationSpecifiers ::= declarationSpecifier declarationSpecifiersPrime 
+
+declarationSpecifiersPrime ::= ''
+declarationSpecifiersPrime ::= declarationSpecifiers 
 
 declarationSpecifier ::= Const
 declarationSpecifier ::= Static
@@ -57,15 +59,11 @@ statement ::= selectionStatement
 
 iterationStatement ::= For ( forCondition ) statement
 
-forCondition ::= forDeclaration ; forExpression ; forExpression
-//forCondition ::= expression ; forExpression ; forExpression
+forCondition ::= forDeclaration assignmentExpression ; assignmentExpression
 
-forDeclaration ::= declaration
+forDeclaration ::= FuncDeclaration
 
-forExpression ::= assignmentExpression forExpressionPrime
-forExpressionPrime ::= , assignmentExpression
-forExpressionPrime ::= ''
-
+assignmentExpression ::= conditionalExpression
 expressionStatement ::= expression ;
 
 // this is redundat and is added in case we need it later
@@ -127,15 +125,19 @@ multiplicativeExpression ::= ''
 
 castExpression ::= unaryExpression
 castExpression ::= DigitSequence
+castExpression ::= Constant
+castExpression ::= Identifier
 
 unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha 
 
 unaryExpressionAlpha ::= unaryOperator castExpression
 unaryExpressionAlpha ::= typeSpecifier
-unaryExpressionAlpha ::= && Identifier
 
 unaryExpressionPrime ::= ++
 unaryExpressionPrime ::= --
+
+unaryOperator ::= +
+unaryOperator ::= -
 
 selectionStatement ::= if ( expression ) compoundStatement selectionStatementPrime
 selectionStatementPrime ::= else statement
