@@ -1,30 +1,26 @@
-import {ISyntax, ISyntaxProvider} from './ISyntaxProvider';
-import {mapSet, ProductionSet} from './Set.js';
+import { ISyntax, ISyntaxProvider } from './ISyntaxProvider';
+import { mapSet, ProductionSet } from './Set.js';
 
 export type TypeSpecifier = 'typeSpecifier';
-
 export type DeclarationSpecifier = 'declarationSpecifier';
-
 export type DeclarationSpecifiers = 'declarationSpecifiers';
 export type DeclarationSpecifiersPrime = 'declarationSpecifiersPrime';
-
-export type Declarator = 'declarator';
-
-export type DeclaratorList = 'initDeclaratorList';
-
 export type Initializer = 'initializer';
-
 export type InitializerList = 'initializerList';
+export type initDeclaratorListPrime = 'initDeclaratorListPrime';
+export type ExternalDeclaration = 'externalDeclaration';
+export type declaratorPrime = 'declaratorPrime';
 
 export type DeclarationSet =
   | TypeSpecifier
   | DeclarationSpecifier
   | DeclarationSpecifiers
-  | Declarator
-  | DeclaratorList
+  | initDeclaratorListPrime
   | DeclarationSpecifiersPrime
   | Initializer
   | InitializerList
+  | declaratorPrime
+  | ExternalDeclaration
   | 'declaration';
 
 const typeSpecifier: ProductionSet = {
@@ -52,22 +48,18 @@ const declarationSpecifiersPrime: ProductionSet = {
   ...mapSet(declarationSpecifiers, ['declarationSpecifiers']),
 };
 
-const declarator: ProductionSet = {
-  Semi: [''],
-  Equal: [''],
-  Comma: ['Comma', 'Identifier', 'initDeclaratorList'],
-};
-
-const initDeclaratorList: ProductionSet = {
-  Identifier: ['Identifier', 'declarator'],
-};
-
 export const declaration: ProductionSet = {
   ...mapSet(declarationSpecifiers, [
     'declarationSpecifiers',
-    'initDeclaratorList',
-    'Semi',
+    'Identifier',
+    'declarationPrime',
   ]),
+};
+
+const initDeclaratorListPrime: ProductionSet = {
+  Semi: [''],
+  Comma: ['Comma', 'Identifier', 'initDeclaratorListPrime'],
+  Assign: [''],
 };
 
 export const initializer: ProductionSet = {
@@ -75,7 +67,46 @@ export const initializer: ProductionSet = {
   Equal: ['Equal', 'initializerList']
 }
 
-const initializerList: ProductionSet = {  }
+const initializerList: ProductionSet = {
+  Identifier: ['expression'],
+  Semi: ['expression'],
+  Comma: ['expression'],
+  LeftBrace: ['LeftBrace', 'Constant', 'RightBrace'],
+  Constant: ['expression'],
+  Question: ['expression'],
+  OrOr: ['expression'],
+  AndAnd: ['expression'],
+  Or: ['expression'],
+  Caret: ['expression'],
+  And: ['expression'],
+  Equal: ['expression'],
+  NotEqual: ['expression'],
+  Less: ['expression'],
+  LessEqual: ['expression'],
+  GreaterEqual: ['expression'],
+  LeftShift: ['expression'],
+  RightShift: ['expression'],
+  Plus: ['expression'],
+  Minus: ['expression'],
+  Star: ['expression'],
+  Mod: ['expression'],
+  DigitSequence: ['expression'],
+  True: ['expression'],
+  False: ['expression'],
+  StringLiteral: ['expression'],
+  PlusPlus: ['expression'],
+  MinusMinus: ['expression'],
+};
+
+const declaratorPrime: ProductionSet = {
+  Semi: ['initDeclaratorListPrime', 'initializer', 'Semi'],
+  LeftParen: ['LeftParen', 'functionDefinition'],
+  Comma: ['Comma', 'Identifier', 'initDeclaratorListPrime'],
+};
+
+const externalDeclaration: ProductionSet = mapSet(typeSpecifier,
+  ['declarationSpecifiers', 'Identifier', 'declaratorPrime']
+);
 
 export const DeclarationSyntaxProvider: ISyntaxProvider<DeclarationSet> = {
   getSyntax(): ISyntax<DeclarationSet> {
@@ -84,11 +115,12 @@ export const DeclarationSyntaxProvider: ISyntaxProvider<DeclarationSet> = {
       declarationSpecifiersPrime,
       declarationSpecifier,
       declarationSpecifiers,
-      declarator,
-      initDeclaratorList,
+      initDeclaratorListPrime,
       declaration,
       initializer,
-      initializerList
+      initializerList,
+      declaratorPrime,
+      externalDeclaration,
     };
   },
 };

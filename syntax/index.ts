@@ -1,6 +1,7 @@
 import {DeclarationSet} from './DeclarationSyntax';
 import {FunctionSet} from './functionSyntax';
 import {ExpressionSet} from './ExpressionSyntax';
+import { StamentSet } from './StamentSyntax';
 
 export type Production<T extends string> = {
   [k in T]: T;
@@ -36,6 +37,7 @@ export type Derivations =
   | DeclarationSet
   | FunctionSet
   | ExpressionSet
+  | StamentSet
   | 'compilationUnitA'
   | 'compilationUnit';
 
