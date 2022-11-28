@@ -1,151 +1,136 @@
-compilationUnitA ::=externalDeclaration compilationUnitA
-externalDeclaration ::= declarationSpecifiers Identifier declaratorPrime
-declaratorPrime ::= initDeclaratorListPrime initializer ;
-declaratorPrime ::= ( functionDefinition
+parser grammar c;
 
-// int x = int x;|
-compilationUnitA::=''
+options {
+    tokenVocab=cLexer;
+}
 
-initDeclaratorListPrime: Comma Identifier initDeclaratorListPrime
-initDeclaratorListPrime ::= ''
+compilationUnit: compilationUnitA EOF;
 
-declarationSpecifiers ::= declarationSpecifier declarationSpecifiersPrime
+compilationUnitA: externalDeclaration compilationUnitA | '';
+externalDeclaration : declarationSpecifiers Identifier declaratorPrime;
+declaratorPrime : initDeclaratorListPrime initializer Semi | LeftParen functionDefinition;
 
-declarationSpecifiersPrime ::= ''
-declarationSpecifiersPrime ::= declarationSpecifiers
 
-declarationSpecifier ::= Const
-declarationSpecifier ::= Static
-declarationSpecifier ::= typeSpecifier
+initDeclaratorListPrime : Comma Identifier initDeclaratorListPrime | '';
 
-typeSpecifier ::= Char
-typeSpecifier ::= Int
-typeSpecifier ::= Bool
+declarationSpecifiers : declarationSpecifier declarationSpecifiersPrime;
 
-initializer ::= = initializerList
-initializer ::= ''
+declarationSpecifiersPrime : '' | declarationSpecifiers;
 
-initializerList ::= { Constant }
-initializerList ::= expression
+declarationSpecifier : Const | Static | typeSpecifier;
 
-functionDefinition ::= declaration fD1
-functionDefinition ::= ) fD1
+typeSpecifier : Char | Int | Bool;
 
-fD1 ::= compoundStatement
-fD1 ::= ;
+initializer : Assign initializerList | '';
 
-declaration ::= declarationSpecifiers Identifier declarationPrime
-declarationPrime ::= , declaration
-declarationPrime ::= )
+initializerList : LeftBrace Constant RightBrace | expression;
 
-FuncDeclaration ::= declarationSpecifiers Identifier FuncDeclarationPrime
-FuncDeclarationPrime ::= , FuncDeclaration
-FuncDeclarationPrime ::= initializer ;
+functionDefinition : declaration fD1 | RightParen fD1;
 
-compoundStatement ::= Lef bI }
+fD1 : compoundStatement | Semi;
 
-bI ::= ''
-bI ::= blockItemList
+declaration : declarationSpecifiers Identifier declarationPrime;
+declarationPrime : Comma declaration | RightParen;
 
-blockItemList ::= blockItem bI
+FuncDeclaration : declarationSpecifiers Identifier FuncDeclarationPrime;
 
-blockItem ::= FuncDeclaration
-blockItem ::= statement
+FuncDeclarationPrime : Comma FuncDeclaration | initializer Semi;
 
-statementPrime ::= statement statementPrime
-statementPrime ::= ''
-statementPrime ::= FuncDeclaration
+compoundStatement : LeftBrace bI RightBrace;
 
-statement ::= iterationStatement
-statement ::= compoundStatement
-statement ::= expressionStatement
-statement ::= selectionStatement
+bI : '' |  blockItemList;
 
-iterationStatement ::= For ( forCondition ) { statementPrime }
+blockItemList : blockItem bI;
 
-forCondition ::= forDeclaration assignmentExpression ; assignmentExpression
+blockItem : FuncDeclaration | statement;
 
-forDeclaration ::= FuncDeclaration
+statementPrime : statement statementPrime | '' | FuncDeclaration;
 
-assignmentExpression ::= conditionalExpression
-expressionStatement ::= expression ;
+statement : iterationStatement 
+| compoundStatement 
+| expressionStatement 
+| selectionStatement 
+| Return expressionStatement;
 
-// this is redundat and is added in case we need it later
-expression ::= conditionalExpression expressionPrime
-expressionPrime ::= , conditionalExpression
-expressionPrime ::= ''
+iterationStatement : For LeftParen forCondition RightParen LeftBrace statementPrime RightBrace;
 
-conditionalExpression ::= logicalOrExpression conditionalExpressionPrime
-conditionalExpressionPrime ::= ? expression : conditionalExpression
-conditionalExpressionPrime ::= ''
+forCondition : forDeclaration assignmentExpression Semi assignmentExpression;
 
-logicalOrExpression ::= logicalAndExpression logicalOrExpressionPrime
-logicalOrExpressionPrime ::= || logicalAndExpression logicalOrExpressionPrime
-logicalOrExpressionPrime ::= ''
+forDeclaration : FuncDeclaration;
 
-logicalAndExpression ::= inclusiveOrExpression logicalAndExpressionPrime
-logicalAndExpressionPrime ::= && inclusiveOrExpression logicalAndExpressionPrime
-logicalAndExpressionPrime ::= ''
+assignmentExpression : conditionalExpression;
+expressionStatement : expression Semi;
 
-inclusiveOrExpression ::= exclusiveOrExpression inclusiveOrExpressionPrime
-inclusiveOrExpressionPrime ::= | exclusiveOrExpression inclusiveOrExpressionPrime
-inclusiveOrExpressionPrime ::= ''
+expression : conditionalExpression expressionPrime;
+expressionPrime : Comma conditionalExpression expressionPrime | '';
 
-exclusiveOrExpression ::= andExpression exclusiveOrExpressionPrime
-exclusiveOrExpressionPrime ::= ^ andExpression exclusiveOrExpressionPrime
-exclusiveOrExpressionPrime ::= ''
+conditionalExpression : logicalOrExpression conditionalExpressionPrime;
+conditionalExpressionPrime : Question expression Colon conditionalExpression | '';
 
-andExpression ::= equalityExpression andExpressionPrime
-andExpressionPrime ::= & equalityExpression andExpressionPrime
-andExpressionPrime ::= ''
+logicalOrExpression : logicalAndExpression logicalOrExpressionPrime;
+logicalOrExpressionPrime : OrOr logicalAndExpression logicalOrExpressionPrime | '';
 
-equalityExpression ::= relationalExpression equalityExpressionPrime
-equalityExpressionPrime ::= == relationalExpression equalityExpressionPrime
-equalityExpressionPrime ::= != relationalExpression equalityExpressionPrime
-equalityExpressionPrime ::= ''
+logicalAndExpression : inclusiveOrExpression logicalAndExpressionPrime;
+logicalAndExpressionPrime : AndAnd inclusiveOrExpression logicalAndExpressionPrime | '';
 
-relationalExpression ::= shiftExpression relationalExpressionPrime
-relationalExpressionPrime ::= < shiftExpression relationalExpressionPrime
-relationalExpressionPrime ::= > shiftExpression relationalExpressionPrime
-relationalExpressionPrime ::= <= shiftExpression relationalExpressionPrime
-relationalExpressionPrime ::= >= shiftExpression relationalExpressionPrime
-relationalExpressionPrime ::= ''
+inclusiveOrExpression : exclusiveOrExpression inclusiveOrExpressionPrime;
+inclusiveOrExpressionPrime : Or exclusiveOrExpression inclusiveOrExpressionPrime | '';
 
-shiftExpression ::= additiveExpression shiftExpressionPrime
-shiftExpressionPrime ::= << additiveExpression shiftExpressionPrime
-shiftExpressionPrime ::= >> additiveExpression shiftExpressionPrime
-shiftExpressionPrime ::= ''
+exclusiveOrExpression : andExpression exclusiveOrExpressionPrime;
+exclusiveOrExpressionPrime : Caret andExpression exclusiveOrExpressionPrime | '';
 
-additiveExpression ::= multiplicativeExpression additiveExpressionPrime
-additiveExpressionPrime ::= + multiplicativeExpression additiveExpressionPrime
-additiveExpressionPrime ::= - multiplicativeExpression additiveExpressionPrime
-additiveExpressionPrime ::= ''
+andExpression : equalityExpression andExpressionPrime;
+andExpressionPrime : And equalityExpression andExpressionPrime | '';
 
-multiplicativeExpression ::= castExpression multiplicativeExpression
-multiplicativeExpression ::= * castExpression multiplicativeExpression
-multiplicativeExpression ::= / castExpression multiplicativeExpression
-multiplicativeExpression ::= % castExpression multiplicativeExpression
-multiplicativeExpression ::= ''
+equalityExpression : relationalExpression equalityExpressionPrime;
+equalityExpressionPrime : Equal relationalExpression equalityExpressionPrime 
+| NotEqual relationalExpression equalityExpressionPrime 
+| '';
 
-castExpression ::= unaryExpression
-castExpression ::= DigitSequence
-castExpression ::= constantExpression
-castExpression ::= Identifier
+relationalExpression : shiftExpression relationalExpressionPrime;
+relationalExpressionPrime : Less shiftExpression relationalExpressionPrime 
+| Greater shiftExpression relationalExpressionPrime 
+| LessEqual shiftExpression relationalExpressionPrime 
+| GreaterEqual shiftExpression relationalExpressionPrime 
+| '';
 
-constantExpression ::= Constant
+shiftExpression : additiveExpression shiftExpressionPrime;
+shiftExpressionPrime : LeftShift additiveExpression shiftExpressionPrime 
+| RightShift additiveExpression shiftExpressionPrime 
+| '';
 
-unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha
+additiveExpression : multiplicativeExpression additiveExpressionPrime;
+additiveExpressionPrime : Plus multiplicativeExpression additiveExpressionPrime 
+| Minus multiplicativeExpression additiveExpressionPrime 
+| '';
 
-unaryExpressionAlpha ::= unaryOperator castExpression
-unaryExpressionAlpha ::= typeSpecifier
+multiplicativeExpression : castExpression multiplicativeExpression 
+| Star castExpression multiplicativeExpression 
+| Div castExpression multiplicativeExpression
+| Mod castExpression multiplicativeExpression 
+| '';
 
-unaryExpressionPrime ::= ++
-unaryExpressionPrime ::= --
+castExpression : unaryExpression 
+| constanExpression 
+| Identifier invokeExpression;
 
-unaryOperator ::= +
-unaryOperator ::= -
+invokeExpression : LeftParen expression RightParen 
+| '';
 
-selectionStatement ::= if ( expression ) compoundStatement selectionStatementPrime
-selectionStatementPrime ::= else statement
-selectionStatementPrime ::= ''
+constanExpression : Constant 
+| DigitSequence 
+| True 
+| False
+| StringLiteral;
+
+unaryExpression : unaryExpressionPrime unaryExpressionAlpha;
+
+unaryExpressionAlpha : unaryOperator castExpression | typeSpecifier;
+
+unaryExpressionPrime : PlusPlus | MinusMinus;
+
+unaryOperator : Plus | Minus;
+
+selectionStatement : If LeftParen expression RightParen compoundStatement selectionStatementPrime;
+selectionStatementPrime : Else statement | '';
 
