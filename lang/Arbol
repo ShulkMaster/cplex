@@ -1,18 +1,13 @@
 compilationUnitA ::=externalDeclaration compilationUnitA
-externalDeclaration ::= declarationSpecifiers Identifier initDeclaratorListPrime 
-declaratorPrime ::= initDeclaratorList ;
+externalDeclaration ::= declarationSpecifiers Identifier declaratorPrime
+declaratorPrime ::= initDeclaratorListPrime initializer ;
 declaratorPrime ::= ( functionDefinition
 
 // int x = int x;|
 compilationUnitA::=''
 
-initDeclaratorList ::= initDeclarator initDeclaratorListPrime 
-initDeclaratorListPrime ::= , Identifier initDeclaratorList
+initDeclaratorListPrime ::= , Identifier initDeclaratorListPrime
 initDeclaratorListPrime ::= ''
-
-initDeclarator ::= declaration initDeclaratorPrime 
-initDeclaratorPrime ::= = initializer
-initDeclaratorPrime ::= ''
 
 declarationSpecifiers ::= declarationSpecifier declarationSpecifiers
 declarationSpecifiers ::= ''
