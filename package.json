@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "pre-start": "java -jar antlr.jar -lib lang -Dlanguage=JavaScript -encoding UTF8 -Xexact-output-dir -o lexer ./lang/cLexer.g4",
+    "build": "tsc -p tsconfig.json",
     "start": "tsc -p tsconfig.json && node dist/index.js"
   },
   "repository": {

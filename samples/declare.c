@@ -1,7 +1,5 @@
 int x(int madres){
-for(int x = 0; x <5 ;  ++x){
-}
-return;
+return 0;
 }
 
 int main() {
