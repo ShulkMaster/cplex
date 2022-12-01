@@ -2,41 +2,72 @@ import {readFileSync, writeFileSync} from 'fs';
 import papaparse from 'papaparse';
 
 export function writeCode(): void {
-    const csv = readFileSync('lang/xd.csv');
-    const csvData: string[][] = papaparse
+  const csv = readFileSync('lang/xd.csv');
+  const raw = papaparse
     .parse(csv.toString(), {})
-    .data
-    .filter(r => r[0]);
-    const filtered = csvData
-    .flatMap(r => {
-        if(r[0] === 'S') return 'CompilationUnit';
-        const original = r[0];
-        return original[0].toUpperCase() + original.substr(1);
-    })
-    .join(`\n  | `);
-    let union = `\nexport type CGrammar =`;
-    let types = ``;
-    let objects = '\n';
-    const file = writeHeader();
-    for(const row of csvData){
-        if (!Boolean(row[0])) continue;
-        const prod = row[0];
-        const original = prod[0].toUpperCase() + prod[0].substr(1);
-        types = types + `export type ${original} = '${row[0]}';\n`;
-        union = union + `\n  | ${original}`;
-        objects = objects + `const ${row[0]}: ProductionSet = {\n};`;
-    }
+    .data;
+  const csvData: string[][] = raw.filter(r => r[0]);
 
-    const content = file + types + union;
-    writeFileSync('syntax/CSyntax.ts', content);
+  let union = `\nexport type CGrammar =`;
+  let types = ``;
+  let objects = '\n';
+  const file = writeHeader();
+  const headers = raw[0];
+  let finalExport = `export const CSyntaxProvider: ISyntaxProvider<CGrammar> = {
+  getSyntax(): ISyntax<CGrammar> {
+    return {`;
+
+  for (const row of csvData) {
+    if (!Boolean(row[0])) continue;
+    const prod = row[0];
+    const original = prod[0].toUpperCase() + prod.substring(1);
+    types = types + `export type ${original} = '${row[0]}';\n`;
+    union = union + `\n  | ${original}`;
+    const keys = writeKeys(headers, row);
+    console.log(prod);
+    objects = objects + `\nconst ${row[0]}: ProductionSet = {` + keys + '};\n';
+    finalExport = finalExport + `\n      ${prod},`;
+  }
+  union += ';\n';
+  finalExport = finalExport + `
+    }
+  }
+};`;
+  const content = file + types + union + objects + finalExport;
+  writeFileSync('syntax/CSyntax.ts', content);
 }
 
 function writeHeader(): string {
-    const imports = `import { ISyntax, ISyntaxProvider } from './ISyntaxProvider';
+  return `import { ISyntax, ISyntaxProvider } from './ISyntaxProvider';
 import { mapSet, ProductionSet } from './Set.js';
 
-`
-    return imports;
+`;
+}
+
+function writeKeys(headers: string[], productions: string[]): string {
+  let keys = '\n';
+  for (let x = 1; x < productions.length; x++){
+    const rule = productions[x];
+    if(!rule) continue;
+    const ruleList = rule.split(/::=/)[1].trim().split(' ');
+    let terminal = headers[x];
+    if(terminal === '$'){
+      terminal = 'EOF';
+    }
+    for(let j = 0; j < ruleList.length; j++){
+      const l = ruleList[j];
+      if(l === '$'){
+        ruleList[j] = 'EOF';
+      }
+      if(l === 'ε'){
+        ruleList[j] = '';
+      }
+    }
+    const stringJson = JSON.stringify(ruleList, undefined, 0)
+      .replace(/"/g, "'");
+    keys = keys + `${terminal}: ${stringJson},\n`;
+  }
+  return  keys;
 }
 
 writeCode();

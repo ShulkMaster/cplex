@@ -1,15 +1,7 @@
 import cLexer from 'lexer/cLexer.js';
 import {SyntaxTable} from '../syntax/SyntaxTable.js';
-import type {Terminal} from '../syntax';
-import {
-  Derivation,
-  Derivations,
-  cSyntaxProvider,
-  DeclarationSyntaxProvider,
-  FunctionSyntaxProvider,
-  statementSyntaxProvider,
-  expressionSyntaxProvider,
-} from '../syntax/index.js';
+import type {Terminal, Derivation, Derivations} from '../syntax';
+import { CSyntaxProvider } from '../syntax/index.js';
 import antlr4 from 'antlr4';
 
 export type ParseNode = {
@@ -28,12 +20,8 @@ export class CParser {
 
   constructor(lex: cLexer) {
     this.lex = lex;
-    this.table.addSyntaxProvider(cSyntaxProvider);
-    this.table.addSyntaxProvider(DeclarationSyntaxProvider);
-    this.table.addSyntaxProvider(FunctionSyntaxProvider);
-    this.table.addSyntaxProvider(statementSyntaxProvider);
-    this.table.addSyntaxProvider(expressionSyntaxProvider);
-    this.stack.push('compilationUnit');
+    this.table.addSyntaxProvider(CSyntaxProvider);
+    this.stack.push('S');
   }
 
   private getLast(): Derivation {

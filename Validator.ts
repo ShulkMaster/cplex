@@ -1,24 +1,14 @@
 import {readFileSync} from 'fs';
 import papaparse from 'papaparse';
 import {SyntaxTable} from './syntax/SyntaxTable.js';
-import {
-  cSyntaxProvider,
-  DeclarationSyntaxProvider,
-  FunctionSyntaxProvider,
-  statementSyntaxProvider,
-  expressionSyntaxProvider,
-} from './syntax/index.js';
+import { CSyntaxProvider } from './syntax/index.js';
 
 const csv = readFileSync('lang/xd.csv');
 
 const csvData = papaparse.parse(csv.toString(), {});
 const table = new SyntaxTable();
 
-table.addSyntaxProvider(cSyntaxProvider);
-table.addSyntaxProvider(DeclarationSyntaxProvider);
-table.addSyntaxProvider(FunctionSyntaxProvider);
-table.addSyntaxProvider(statementSyntaxProvider);
-table.addSyntaxProvider(expressionSyntaxProvider);
+table.addSyntaxProvider(CSyntaxProvider);
 
 export const validateSyntax = (): void => {
   const header = csvData.data[0];
