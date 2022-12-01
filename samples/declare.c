@@ -1,4 +1,4 @@
-char x(int madres){
+int x(int madres){
 
   bool flag = true;
   for(int x = 0; x < 5; x++){

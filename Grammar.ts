@@ -40,7 +40,7 @@ export function writeCode(): void {
 
 function writeHeader(): string {
   return `import { ISyntax, ISyntaxProvider } from './ISyntaxProvider';
-import { mapSet, ProductionSet } from './Set.js';
+import { ProductionSet } from './Set.js';
 
 `;
 }
@@ -51,9 +51,9 @@ function writeKeys(headers: string[], productions: string[]): string {
     const rule = productions[x];
     if(!rule) continue;
     console.log(rule);
-    
+
     const ruleList = rule.split(/::=/)[1].trim().split(' ');
-    let terminal = headers[x];
+    let terminal = headers[x-1];
     if(terminal === '$'){
       terminal = 'EOF';
     }
