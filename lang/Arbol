@@ -36,6 +36,9 @@ fD1 ::= Semi
 declaration ::= declarationSpecifiers Identifier declarationPrime
 declarationPrime ::= Comma declaration
 declarationPrime ::= RightParen
+declarationPrime ::= Equal constanExpression
+declarationPrime ::= Semi
+declarationPrime ::= 
 
 FuncDeclaration ::= declarationSpecifiers Identifier FuncDeclarationPrime
 FuncDeclarationPrime ::= Comma FuncDeclaration
@@ -63,9 +66,12 @@ statement ::= Return expressionStatement
 
 iterationStatement ::= For LeftParen forCondition RightParen LeftBrace statementPrime RightBrace
 
-forCondition ::= forDeclaration assignmentExpression Semi assignmentExpression
+forCondition ::= forDeclaration Semi assignmentExpression Semi assignmentExpression
 
-forDeclaration ::= FuncDeclaration
+forDeclaration ::= declarationSpecifiers Identifier forDeclarationPrime
+
+forDeclarationPrime ::= Assign conditionalExpression 
+forDeclarationPrime ::= ''
 
 assignmentExpression ::= conditionalExpression
 expressionStatement ::= expression Semi
