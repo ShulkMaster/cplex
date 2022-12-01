@@ -20,6 +20,8 @@ declarationSpecifier ::= typeSpecifier
 typeSpecifier ::= Char
 typeSpecifier ::= Int
 typeSpecifier ::= Bool
+typeSpecifier ::= Void
+typeSpecifier ::= Float
 
 initializer ::= Assign initializerList
 initializer ::= ''
