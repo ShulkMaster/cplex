@@ -111,3 +111,4 @@ dist
 .tern-port
 .idea
 out
+syntax/CSyntax.ts
