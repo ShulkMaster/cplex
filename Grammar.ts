@@ -17,7 +17,8 @@ export function writeCode(): void {
   getSyntax(): ISyntax<CGrammar> {
     return {`;
 
-  for (const row of csvData) {
+  for (let x = 1; x < csvData.length;x++) {
+    const row = csvData[x];
     if (!Boolean(row[0])) continue;
     const prod = row[0];
     const original = prod[0].toUpperCase() + prod.substring(1);
@@ -49,6 +50,8 @@ function writeKeys(headers: string[], productions: string[]): string {
   for (let x = 1; x < productions.length; x++){
     const rule = productions[x];
     if(!rule) continue;
+    console.log(rule);
+    
     const ruleList = rule.split(/::=/)[1].trim().split(' ');
     let terminal = headers[x];
     if(terminal === '$'){

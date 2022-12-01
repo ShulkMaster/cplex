@@ -80,6 +80,7 @@ export class CParser {
     console.error(sourceLine);
     const pad = ''.padStart(errorLocation) + '^';
     console.error(pad);
+    console.log(this.stack);
     throw new Error('ParserException');
   }
 

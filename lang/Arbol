@@ -40,7 +40,6 @@ declarationPrime ::= Comma declaration
 declarationPrime ::= RightParen
 declarationPrime ::= Equal constanExpression
 declarationPrime ::= Semi
-declarationPrime ::= 
 
 FuncDeclaration ::= declarationSpecifiers Identifier FuncDeclarationPrime
 FuncDeclarationPrime ::= Comma FuncDeclaration
@@ -72,7 +71,7 @@ forCondition ::= forDeclaration Semi assignmentExpression Semi assignmentExpress
 
 forDeclaration ::= declarationSpecifiers Identifier forDeclarationPrime
 
-forDeclarationPrime ::= Assign conditionalExpression 
+forDeclarationPrime ::= Assign conditionalExpression
 forDeclarationPrime ::= ''
 
 assignmentExpression ::= conditionalExpression
@@ -81,6 +80,7 @@ expressionStatement ::= expression Semi
 expression ::= conditionalExpression expressionPrime
 expressionPrime ::= Comma conditionalExpression expressionPrime
 expressionPrime ::= ''
+expressionPrime ::= Assign conditionalExpression
 
 conditionalExpression ::= logicalOrExpression conditionalExpressionPrime
 conditionalExpressionPrime ::= Question expression Colon conditionalExpression
@@ -147,7 +147,11 @@ constanExpression ::= True
 constanExpression ::= False
 constanExpression ::= StringLiteral
 
-unaryExpression ::= unaryExpressionPrime 
+unaryExpression ::= unaryExpressionPrime
+unaryExpression ::= unaryOperator
+
+unaryOperator ::= Tilde
+unaryOperator ::= Not
 
 unaryExpressionPrime ::= PlusPlus
 unaryExpressionPrime ::= MinusMinus
