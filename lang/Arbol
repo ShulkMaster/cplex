@@ -139,16 +139,10 @@ constanExpression ::= True
 constanExpression ::= False
 constanExpression ::= StringLiteral
 
-unaryExpression ::= unaryExpressionPrime unaryExpressionAlpha
-
-unaryExpressionAlpha ::= unaryOperator castExpression
-unaryExpressionAlpha ::= ''
+unaryExpression ::= unaryExpressionPrime 
 
 unaryExpressionPrime ::= PlusPlus
 unaryExpressionPrime ::= MinusMinus
-
-unaryOperator ::= Plus
-unaryOperator ::= Minus
 
 selectionStatement ::= If LeftParen expression RightParen compoundStatement selectionStatementPrime
 selectionStatementPrime ::= Else statement
